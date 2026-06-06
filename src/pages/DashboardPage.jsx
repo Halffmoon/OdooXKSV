@@ -17,6 +17,7 @@ function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
               onClick={() => onNavigate && onNavigate(
                 item === 'Vendors' ? 'vendors'
                   : item === "RFQ's" ? 'rfqs'
+                  : item === 'Quotations' ? 'quotations'
                   : 'dashboard'
               )}
             >
