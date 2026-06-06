@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+}
+
+model Vendor {
+  id            Int      @id @default(autoincrement())
+  company_name  String
+  gst_number    String   @unique
+  category      String
+  status        String
+  contact_name  String?
+  contact_email String?
+  contact_phone String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  rfq_assignments RFQVendorAssignment[]
+}
+
+model RFQ {
+  id          Int                  @id @default(autoincrement())
+  title       String
+  category    String
+  deadline    DateTime
+  description String?
+  line_items  RFQLineItem[]
+  vendors     RFQVendorAssignment[]
+  attachments RFQAttachment[]
+  created_at  DateTime             @default(now())
+  updated_at  DateTime             @updatedAt
+}
+
+model RFQLineItem {
+  id     Int    @id @default(autoincrement())
+  rfq    RFQ    @relation(fields: [rfqId], references: [id])
+  rfqId  Int
+  item   String
+  qty    Int
+  unit   String
+}
+
+model RFQVendorAssignment {
+  id        Int    @id @default(autoincrement())
+  rfq       RFQ    @relation(fields: [rfqId], references: [id])
+  rfqId     Int
+  vendor    Vendor @relation(fields: [vendorId], references: [id])
+  vendorId  Int
+  assigned_at DateTime @default(now())
+}
+
+model RFQAttachment {
+  id         Int      @id @default(autoincrement())
+  rfq        RFQ      @relation(fields: [rfqId], references: [id])
+  rfqId      Int
+  filename   String
+  url        String
+  mime_type  String?
+  size       Int?
+  uploaded_at DateTime @default(now())
+}
