@@ -1,0 +1,713 @@
+/* ========================================
+   VENDOR PAGE - SAMSUNG PROFESSIONAL DESIGN
+   Minimalist & Professional
+   (Sidebar styles are in sidebar.css)
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Samsung Colors */
+  --samsung-blue: #1428a0;
+  --samsung-blue-dark: #0d1b5c;
+  --samsung-blue-light: #4b7fff;
+  --text-primary: #1c1c1c;
+  --text-secondary: #5a5a5a;
+  --bg-white: #ffffff;
+  --bg-light: #f5f5f5;
+  --bg-lighter: #fafafa;
+  --border-color: #e0e0e0;
+  --border-light: #f0f0f0;
+  
+  /* Status Colors */
+  --status-active: #27ae60;
+  --status-pending: #f39c12;
+  --status-blocked: #e74c3c;
+  --status-bg-active: #d4edda;
+  --status-bg-pending: #fff3cd;
+  --status-bg-blocked: #f8d7da;
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-light);
+}
+
+/* ========================================
+   MAIN CONTAINER LAYOUT
+   ======================================== */
+
+.vendor-container {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-light);
+}
+
+/* Sidebar styles have been moved to src/styles/sidebar.css */
+
+/* ========================================
+   MAIN CONTENT AREA
+   ======================================== */
+
+.vendor-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 32px;
+  gap: 24px;
+}
+
+/* ========================================
+   HEADER SECTION
+   ======================================== */
+
+.vendor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content h1 {
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.header-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.add-vendor-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--samsung-blue);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.add-vendor-btn:hover {
+  background: var(--samsung-blue-dark);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.add-vendor-btn:active {
+  transform: translateY(0);
+}
+
+.add-vendor-btn span {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ========================================
+   SEARCH SECTION
+   ======================================== */
+
+.vendor-search-section {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.search-bar:focus-within {
+  border-color: var(--samsung-blue);
+  box-shadow: 0 0 0 3px rgba(20, 40, 160, 0.05);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* ========================================
+   FILTER SECTION
+   ======================================== */
+
+.vendor-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: var(--bg-white);
+  border-radius: 4px;
+  box-shadow: var(--shadow-xs);
+}
+
+.filter-btn {
+  padding: 8px 14px;
+  background: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--samsung-blue);
+  color: var(--samsung-blue);
+  background: linear-gradient(135deg, rgba(20, 40, 160, 0.04) 0%, transparent 100%);
+}
+
+.filter-btn.active {
+  background: var(--samsung-blue);
+  color: white;
+  border-color: var(--samsung-blue);
+  font-weight: 600;
+}
+
+/* ========================================
+   TABLE CONTAINER
+   ======================================== */
+
+.vendor-table-container {
+  flex: 1;
+  background: var(--bg-white);
+  border-radius: 4px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.vendor-table thead {
+  background: var(--bg-light);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.vendor-table th {
+  padding: 14px 16px;
+  text-align: left;
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.vendor-table tbody {
+  overflow-y: auto;
+}
+
+.vendor-table tr {
+  border-bottom: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+}
+
+.vendor-table tbody tr:hover {
+  background: var(--bg-lighter);
+}
+
+.vendor-table td {
+  padding: 14px 16px;
+  color: var(--text-primary);
+}
+
+.vendor-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.vendor-name-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  background: var(--samsung-blue);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.gst-cell,
+.contact-cell {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-active {
+  background: var(--status-bg-active);
+  color: var(--status-active);
+}
+
+.status-pending {
+  background: var(--status-bg-pending);
+  color: var(--status-pending);
+}
+
+.status-blocked {
+  background: var(--status-bg-blocked);
+  color: var(--status-blocked);
+}
+
+.status-default {
+  background: var(--bg-light);
+  color: var(--text-secondary);
+}
+
+.action-cell {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-white);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: grid;
+  place-items: center;
+  color: var(--text-secondary);
+}
+
+.action-btn:hover {
+  border-color: var(--samsung-blue);
+  background: linear-gradient(135deg, rgba(20, 40, 160, 0.04) 0%, transparent 100%);
+  color: var(--samsung-blue);
+}
+
+/* ========================================
+   EMPTY STATE
+   ======================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state h3 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   MODAL STYLING
+   ======================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-white);
+  border-radius: 4px;
+  box-shadow: var(--shadow-lg);
+  width: 90%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-lighter);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  font-size: 1.4rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: grid;
+  place-items: center;
+}
+
+.modal-close:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   FORM STYLING
+   ======================================== */
+
+.vendor-form {
+  padding: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-grid .form-group:nth-child(3) {
+  grid-column: 1;
+}
+
+.form-grid .form-group:nth-child(7) {
+  grid-column: 1 / -1;
+}
+
+.vendor-form label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.vendor-form input,
+.vendor-form select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-white);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.vendor-form input::placeholder {
+  color: #999;
+}
+
+.vendor-form input:focus,
+.vendor-form select:focus {
+  outline: none;
+  border-color: var(--samsung-blue);
+  box-shadow: 0 0 0 3px rgba(20, 40, 160, 0.1);
+}
+
+/* ========================================
+   ALERTS
+   ======================================== */
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.alert-success {
+  background: var(--status-bg-active);
+  color: var(--status-active);
+  border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+  background: var(--status-bg-blocked);
+  color: var(--status-blocked);
+  border: 1px solid #f5c6cb;
+}
+
+/* ========================================
+   FORM ACTIONS
+   ======================================== */
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--samsung-blue);
+  color: white;
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-primary:hover {
+  background: var(--samsung-blue-dark);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--bg-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--border-light);
+  border-color: var(--samsung-blue);
+  color: var(--samsung-blue);
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .vendor-sidebar {
+    width: 240px;
+  }
+
+  .vendor-main {
+    padding: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .vendor-container {
+    flex-direction: column;
+  }
+
+  .vendor-sidebar {
+    width: 100%;
+    flex-direction: row;
+    padding: 12px 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    height: auto;
+  }
+
+  .sidebar-brand {
+    padding: 0 20px;
+    margin-bottom: 0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 0;
+    margin-bottom: 0;
+    overflow-x: auto;
+    flex: 1;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 16px;
+    border-radius: 0;
+  }
+
+  .nav-item.active {
+    border-left: none;
+    border-bottom-color: var(--samsung-blue);
+    background: transparent;
+  }
+
+  .vendor-main {
+    padding: 16px;
+  }
+
+  .vendor-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .add-vendor-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .vendor-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+  }
+
+  .vendor-table {
+    font-size: 0.85rem;
+  }
+
+  .vendor-table th,
+  .vendor-table td {
+    padding: 10px 12px;
+  }
+
+  .vendor-name-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .vendor-table {
+    font-size: 0.8rem;
+  }
+
+  .vendor-table th,
+  .vendor-table td {
+    padding: 8px 10px;
+  }
+
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

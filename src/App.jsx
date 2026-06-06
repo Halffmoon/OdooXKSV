@@ -242,7 +242,8 @@ function App() {
       {page === 'vendors' && user && (
         <VendorPage
           apiBase={API_BASE}
-          onBack={() => switchPage('dashboard')}
+          user={user}
+          onNavigate={switchPage}
         />
       )}
     </div>
