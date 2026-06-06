@@ -58,6 +58,7 @@ model Quotation {
   status        String
   items         QuotationItem[]
   approvals     Approval[]
+  purchaseOrders PurchaseOrder[]
   created_at    DateTime         @default(now())
   updated_at    DateTime         @updatedAt
 }
@@ -82,6 +83,29 @@ model Approval {
   remarks      String?
   created_at   DateTime   @default(now())
   updated_at   DateTime   @updatedAt
+}
+
+model PurchaseOrder {
+  id            Int        @id @default(autoincrement())
+  po_number     String     @unique
+  quotation     Quotation  @relation(fields: [quotation_id], references: [id])
+  quotation_id  Int
+  status        String
+  invoices      Invoice[]
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+}
+
+model Invoice {
+  id             Int           @id @default(autoincrement())
+  invoice_number String        @unique
+  purchase_order PurchaseOrder @relation(fields: [po_id], references: [id])
+  po_id          Int
+  tax_amount     Float
+  grand_total    Float
+  status         String
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
 }
 
 model RFQLineItem {
