@@ -14,6 +14,7 @@ function RFQPage({ apiBase, onBack }) {
     description: '',
     line_items: [{ item: '', quantity: 1, unit: '' }],
     vendor_ids: [],
+    attachments: [],
   });
 
   const fetchRfqs = async () => {
@@ -82,6 +83,13 @@ function RFQPage({ apiBase, onBack }) {
     });
   };
 
+  const handleAttachmentsChange = (files) => {
+    setForm((current) => ({
+      ...current,
+      attachments: Array.from(files),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -97,10 +105,18 @@ function RFQPage({ apiBase, onBack }) {
     setLoading(true);
 
     try {
+      const payload = new FormData();
+      payload.append('title', form.title);
+      payload.append('category', form.category);
+      payload.append('deadline', form.deadline);
+      payload.append('description', form.description);
+      payload.append('line_items', JSON.stringify(form.line_items));
+      payload.append('vendor_ids', JSON.stringify(form.vendor_ids));
+      form.attachments.forEach((file) => payload.append('attachments', file));
+
       const res = await fetch(`${apiBase}/rfqs`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: payload,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -116,6 +132,7 @@ function RFQPage({ apiBase, onBack }) {
         description: '',
         line_items: [{ item: '', quantity: 1, unit: '' }],
         vendor_ids: [],
+        attachments: [],
       });
       fetchRfqs();
     } catch (err) {
@@ -244,6 +261,24 @@ function RFQPage({ apiBase, onBack }) {
                   <span>{vendor.company_name}</span>
                 </label>
               ))}
+            </div>
+
+            <div className="form-row">
+              <label>Attachments</label>
+              <input
+                type="file"
+                multiple
+                onChange={(e) => handleAttachmentsChange(e.target.files)}
+              />
+              {form.attachments.length > 0 && (
+                <div className="attachment-list">
+                  {form.attachments.map((file, index) => (
+                    <div key={`${file.name}-${file.size}-${index}`} className="attachment-item">
+                      {file.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="form-actions rfq-form-actions">

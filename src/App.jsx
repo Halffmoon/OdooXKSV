@@ -4,6 +4,7 @@ import SignupPage from './pages/SignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import VendorPage from './pages/VendorPage.jsx';
 import RFQPage from './pages/RFQPage.jsx';
+import QuotationPage from './pages/QuotationPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -234,6 +235,13 @@ function App() {
 
       {page === 'rfqs' && user && (
         <RFQPage
+          apiBase={API_BASE}
+          onBack={() => switchPage('dashboard')}
+        />
+      )}
+
+      {page === 'quotations' && user && (
+        <QuotationPage
           apiBase={API_BASE}
           onBack={() => switchPage('dashboard')}
         />

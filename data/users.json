@@ -1,5 +1,15 @@
 [
   {
+    "firstName": "Mihir",
+    "lastName": "Patel",
+    "email": "mihir@gmail.com",
+    "phone": "9428038999",
+    "role": "Officer",
+    "country": "India",
+    "password": "M@1231",
+    "extra": ""
+  },
+  {
     "firstName": "henit",
     "lastName": "panchal",
     "email": "henitpanchal007@gmail.com",

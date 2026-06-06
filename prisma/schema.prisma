@@ -30,6 +30,7 @@ model Vendor {
   created_at      DateTime              @default(now())
   updated_at      DateTime              @updatedAt
   rfq_assignments RFQVendorAssignment[]
+  quotations      Quotation[]
 }
 
 model RFQ {
@@ -43,6 +44,20 @@ model RFQ {
   line_items       RFQLineItem[]
   assigned_vendors RFQVendorAssignment[]
   attachments      RFQAttachment[]
+  quotations       Quotation[]
+}
+
+model Quotation {
+  id            Int      @id @default(autoincrement())
+  rfq           RFQ      @relation(fields: [rfq_id], references: [id])
+  rfq_id        Int
+  vendor        Vendor   @relation(fields: [vendor_id], references: [id])
+  vendor_id     Int
+  total_amount  Float
+  delivery_days Int
+  status        String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 }
 
 model RFQLineItem {
