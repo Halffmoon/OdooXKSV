@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import VendorPage from './pages/VendorPage.jsx';
+import RFQPage from './pages/RFQPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -228,6 +229,13 @@ function App() {
           orders={recentOrders}
           onLogout={handleLogout}
           onNavigate={switchPage}
+        />
+      )}
+
+      {page === 'rfqs' && user && (
+        <RFQPage
+          apiBase={API_BASE}
+          onBack={() => switchPage('dashboard')}
         />
       )}
 

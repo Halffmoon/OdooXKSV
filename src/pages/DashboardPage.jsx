@@ -14,7 +14,11 @@ function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
             <button
               key={item}
               className="nav-item"
-              onClick={() => onNavigate && onNavigate(item === 'Vendors' ? 'vendors' : 'dashboard')}
+              onClick={() => onNavigate && onNavigate(
+                item === 'Vendors' ? 'vendors'
+                  : item === "RFQ's" ? 'rfqs'
+                  : 'dashboard'
+              )}
             >
               {item}
             </button>

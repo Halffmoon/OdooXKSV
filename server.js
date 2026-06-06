@@ -267,6 +267,70 @@ app.post('/api/vendors', async (req, res) => {
   }
 });
 
+app.get('/api/rfqs', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. RFQ APIs are not available right now.' });
+  }
+
+  try {
+    const rfqs = await prisma.rFQ.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        line_items: true,
+        assigned_vendors: { include: { vendor: true } },
+        attachments: true,
+      },
+    });
+    res.json({ rfqs });
+  } catch (err) {
+    console.error('Error fetching RFQs', err);
+    res.status(500).json({ error: 'Unable to fetch RFQs' });
+  }
+});
+
+app.post('/api/rfqs', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. RFQ APIs are not available right now.' });
+  }
+
+  const { title, category, deadline, description, line_items, vendor_ids } = req.body;
+  if (!title || !category || !deadline || !Array.isArray(line_items) || line_items.length === 0) {
+    return res.status(400).json({ error: 'Missing required RFQ fields.' });
+  }
+
+  try {
+    const rfq = await prisma.rFQ.create({
+      data: {
+        title: title.trim(),
+        category: category.trim(),
+        deadline: new Date(deadline),
+        description: description?.trim() ?? '',
+        line_items: {
+          create: line_items.map((item) => ({
+            item: item.item.trim(),
+            quantity: Number(item.quantity) || 1,
+            unit: item.unit.trim() || 'NOS',
+          })),
+        },
+        assigned_vendors: {
+          create: (Array.isArray(vendor_ids) ? vendor_ids : []).map((vendorId) => ({
+            vendor: { connect: { id: Number(vendorId) } },
+          })),
+        },
+      },
+      include: {
+        line_items: true,
+        assigned_vendors: { include: { vendor: true } },
+        attachments: true,
+      },
+    });
+    res.json({ rfq });
+  } catch (err) {
+    console.error('Error creating RFQ', err);
+    res.status(500).json({ error: 'Unable to create RFQ' });
+  }
+});
+
 await ensureDataFiles();
 
 const server = app.listen(port, () => {
