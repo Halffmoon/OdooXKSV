@@ -1,0 +1,624 @@
+/* ========================================
+   RFQ PAGE - DASHBOARD MATCHING THEME
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── Container ── */
+.rfq-dashboard-container {
+  display: flex;
+  height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.rfq-dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+/* ── Header ── */
+.rfq-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 32px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8ecf0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  flex-shrink: 0;
+}
+
+.rfq-header-left h1 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.rfq-header-left p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.rfq-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rfq-header-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: rgba(20,40,160,0.08);
+  color: #1428a0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rfq-new-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  background: #1428a0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.rfq-new-btn:hover {
+  background: #0f1f7a;
+  box-shadow: 0 4px 12px rgba(20,40,160,0.25);
+}
+
+/* ── Content ── */
+.rfq-dashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rfq-dashboard-content::-webkit-scrollbar { width: 6px; }
+.rfq-dashboard-content::-webkit-scrollbar-track { background: transparent; }
+.rfq-dashboard-content::-webkit-scrollbar-thumb { background: #d0d5dd; border-radius: 3px; }
+
+/* ── Stat Cards ── */
+.rfq-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.rfq-stat-card {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 22px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e8ecf0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.rfq-stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--sc, #1428a0);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.rfq-stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.rfq-stat-card:hover::after { opacity: 1; }
+
+.rfq-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.rfq-stat-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.rfq-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* ── Content Grid ── */
+.rfq-content-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+}
+
+/* ── Panel ── */
+.rfq-panel {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e8ecf0;
+  overflow: hidden;
+}
+
+.rfq-table-panel {
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e8ecf0;
+  overflow: hidden;
+}
+
+.rfq-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.rfq-panel-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1c1c1c;
+  margin: 0;
+}
+
+.rfq-panel-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(20,40,160,0.08);
+  color: #1428a0;
+}
+
+/* ── Form Inner ── */
+.rfq-form-inner {
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.rfq-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.rfq-field {
+  display: grid;
+  gap: 6px;
+}
+
+.rfq-field label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.rfq-field input,
+.rfq-field textarea,
+.rfq-field select {
+  border: 1px solid #e0e5ec;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: #1c1c1c;
+  background: #fafbfc;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rfq-field input:focus,
+.rfq-field textarea:focus,
+.rfq-field select:focus {
+  outline: none;
+  border-color: #1428a0;
+  box-shadow: 0 0 0 3px rgba(20,40,160,0.08);
+}
+
+.rfq-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.rfq-file-input {
+  border: 1px dashed #d0d5dd !important;
+  background: #fafafa !important;
+  cursor: pointer;
+}
+
+.rfq-section-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+/* ── Line Items ── */
+.rfq-line-items {
+  display: grid;
+  gap: 8px;
+}
+
+.rfq-line-item-row {
+  display: grid;
+  grid-template-columns: 2fr 80px 80px auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.rfq-line-item-row input {
+  border: 1px solid #e0e5ec;
+  border-radius: 4px;
+  padding: 9px 10px;
+  font-size: 0.88rem;
+  color: #1c1c1c;
+  background: #fafbfc;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.rfq-line-item-row input:focus {
+  outline: none;
+  border-color: #1428a0;
+}
+
+.rfq-remove-btn {
+  border: none;
+  background: #fff0f0;
+  color: #e74c3c;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s ease;
+}
+
+.rfq-remove-btn:hover { background: #fde8e8; }
+
+.rfq-add-item-btn {
+  border: 1px dashed #d0d5dd;
+  background: transparent;
+  color: #1428a0;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.rfq-add-item-btn:hover {
+  background: rgba(20,40,160,0.05);
+  border-color: #1428a0;
+}
+
+/* ── Vendor Grid ── */
+.rfq-vendor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.rfq-vendor-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e0e5ec;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  color: #374151;
+  background: #fafbfc;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.rfq-vendor-chip:hover {
+  border-color: #1428a0;
+  background: rgba(20,40,160,0.04);
+}
+
+.rfq-vendor-chip.selected {
+  border-color: #1428a0;
+  background: rgba(20,40,160,0.07);
+  color: #1428a0;
+  font-weight: 600;
+}
+
+.rfq-vendor-chip input { accent-color: #1428a0; }
+.rfq-help { font-size: 0.85rem; color: #9ca3af; }
+
+/* ── Attachment List ── */
+.rfq-attachment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.rfq-attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(20,40,160,0.06);
+  color: #1428a0;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ── Form Actions ── */
+.rfq-form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rfq-primary-btn {
+  padding: 11px 22px;
+  background: #1428a0;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.rfq-primary-btn:hover:not(:disabled) {
+  background: #0f1f7a;
+  box-shadow: 0 4px 12px rgba(20,40,160,0.25);
+}
+
+.rfq-primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.rfq-ghost-btn {
+  padding: 11px 20px;
+  background: #f5f5f5;
+  color: #5a5a5a;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.rfq-ghost-btn:hover {
+  background: #fff0f0;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.rfq-success-msg {
+  padding: 12px 16px;
+  background: #d4edda;
+  color: #27ae60;
+  border: 1px solid #a8d5b5;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.rfq-error-msg {
+  padding: 12px 16px;
+  background: #fde8e8;
+  color: #e74c3c;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+/* ── Recent RFQ List ── */
+.rfq-recent-list {
+  padding: 12px 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.rfq-recent-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #f0f2f5;
+  transition: all 0.18s ease;
+}
+
+.rfq-recent-item:hover {
+  background: #fafbfc;
+  border-color: #e8ecf0;
+}
+
+.rfq-recent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1428a0;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.rfq-recent-info { flex: 1; min-width: 0; }
+
+.rfq-recent-title {
+  font-weight: 600;
+  color: #1c1c1c;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rfq-recent-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rfq-recent-meta span {
+  font-size: 0.78rem;
+  color: #6b7280;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.rfq-recent-desc {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  margin: 6px 0 0;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rfq-empty {
+  color: #9ca3af;
+  font-size: 0.88rem;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ── Full Table ── */
+.rfq-table-wrap {
+  overflow-x: auto;
+  padding: 0 20px 20px;
+}
+
+.rfq-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.rfq-data-table thead {
+  background: #fafafa;
+  border-bottom: 1px solid #e8ecf0;
+}
+
+.rfq-data-table th {
+  padding: 12px 14px;
+  text-align: left;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rfq-data-table tbody tr {
+  border-bottom: 1px solid #f0f2f5;
+  transition: background 0.15s ease;
+}
+
+.rfq-data-table tbody tr:last-child { border-bottom: none; }
+.rfq-data-table tbody tr:hover { background: #fafafa; }
+
+.rfq-data-table td {
+  padding: 12px 14px;
+  color: #374151;
+}
+
+.rfq-table-title {
+  font-weight: 600;
+  color: #1428a0;
+}
+
+.rfq-count-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(20,40,160,0.07);
+  color: #1428a0;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.rfq-table-empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 24px 14px;
+  font-size: 0.88rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1200px) {
+  .rfq-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .rfq-content-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .rfq-dashboard-container { flex-direction: column; height: auto; min-height: 100vh; }
+  .rfq-dashboard-main { overflow: visible; }
+  .rfq-dashboard-header { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .rfq-dashboard-content { padding: 16px; overflow: visible; }
+  .rfq-stats-row { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .rfq-form-grid-2 { grid-template-columns: 1fr; }
+  .rfq-line-item-row { grid-template-columns: 1fr 1fr; }
+}
