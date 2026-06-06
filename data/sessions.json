@@ -148,5 +148,59 @@
     "email": "henitpanchal007@gmail.com",
     "role": "Admin",
     "createdAt": "2026-06-06T07:40:30.090Z"
+  },
+  {
+    "sessionId": "479e22a4-0af7-416f-9381-64b1dad722ab",
+    "email": "henitpanchal007@gmail.com",
+    "role": "Admin",
+    "createdAt": "2026-06-06T09:59:43.439Z"
+  },
+  {
+    "sessionId": "723307ca-78f9-4207-bf4f-cbed50c010ae",
+    "email": "henitpanchal007@gmail.com",
+    "role": "Admin",
+    "createdAt": "2026-06-06T10:00:33.617Z"
+  },
+  {
+    "sessionId": "b7eb3c08-dcc6-4ab8-9115-bc5ee01e95b4",
+    "email": "henitpanchal007@gmail.com",
+    "role": "Admin",
+    "createdAt": "2026-06-06T10:07:27.903Z"
+  },
+  {
+    "sessionId": "c64d9633-a51e-4627-b2e8-ec1e6007dc34",
+    "email": "krish2@gmail.com",
+    "role": "Manager",
+    "createdAt": "2026-06-06T10:13:24.944Z"
+  },
+  {
+    "sessionId": "6dc74da7-aa26-46f4-a2c5-262594b36c4b",
+    "email": "krish2@gmail.com",
+    "role": "Manager",
+    "createdAt": "2026-06-06T10:15:57.474Z"
+  },
+  {
+    "sessionId": "a2b47c08-384e-4dff-9f04-e7ca966e09d5",
+    "email": "hetvi@gmail.com",
+    "role": "Vendor",
+    "createdAt": "2026-06-06T10:16:46.468Z"
+  },
+  {
+    "sessionId": "8cb5d18d-3448-4a57-a3c5-ca1a20c22e05",
+    "email": "krish2@gmail.com",
+    "role": "Manager",
+    "createdAt": "2026-06-06T10:17:40.672Z"
+  },
+  {
+    "sessionId": "35b2fb0d-839c-4c8a-97ae-81a56382cf14",
+    "email": "hetvi@gmail.com",
+    "role": "Vendor",
+    "createdAt": "2026-06-06T10:19:01.885Z"
+  },
+  {
+    "sessionId": "4d5c81df-ac12-401f-bf25-10a2785e28cf",
+    "email": "hetvi@gmail.com",
+    "role": "Vendor",
+    "createdAt": "2026-06-06T10:23:40.012Z"
   }
 ]

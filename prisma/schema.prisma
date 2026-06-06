@@ -5,6 +5,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -48,62 +49,84 @@ model RFQ {
 }
 
 model Quotation {
-  id            Int              @id @default(autoincrement())
-  rfq           RFQ              @relation(fields: [rfq_id], references: [id])
-  rfq_id        Int
-  vendor        Vendor           @relation(fields: [vendor_id], references: [id])
-  vendor_id     Int
-  total_amount  Float
-  delivery_days Int
-  status        String
-  items         QuotationItem[]
-  approvals     Approval[]
+  id             Int             @id @default(autoincrement())
+  rfq            RFQ             @relation(fields: [rfq_id], references: [id])
+  rfq_id         Int
+  vendor         Vendor          @relation(fields: [vendor_id], references: [id])
+  vendor_id      Int
+  total_amount   Float
+  delivery_days  Int
+  status         String
+  items          QuotationItem[]
+  approvals      Approval[]
   purchaseOrders PurchaseOrder[]
-  created_at    DateTime         @default(now())
-  updated_at    DateTime         @updatedAt
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
 }
 
 model QuotationItem {
-  id            Int        @id @default(autoincrement())
-  quotation     Quotation  @relation(fields: [quotation_id], references: [id])
-  quotation_id  Int
-  unit_price    Float
-  total_price   Float
-  description   String?
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
+  id           Int       @id @default(autoincrement())
+  quotation    Quotation @relation(fields: [quotation_id], references: [id])
+  quotation_id Int
+  unit_price   Float
+  total_price  Float
+  description  String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
 }
 
 model Approval {
-  id           Int        @id @default(autoincrement())
-  approval_id  String     @unique
-  quotation    Quotation  @relation(fields: [quotation_id], references: [id])
+  id           Int       @id @default(autoincrement())
+  approval_id  String    @unique
+  quotation    Quotation @relation(fields: [quotation_id], references: [id])
   quotation_id Int
   status       String
   remarks      String?
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
 }
 
 model PurchaseOrder {
-  id            Int        @id @default(autoincrement())
-  po_number     String     @unique
-  quotation     Quotation  @relation(fields: [quotation_id], references: [id])
-  quotation_id  Int
-  status        String
-  invoices      Invoice[]
-  created_at    DateTime   @default(now())
-  updated_at    DateTime   @updatedAt
+  id           Int                 @id @default(autoincrement())
+  po_number    String              @unique
+  po_date      DateTime            @default(now())
+  quotation    Quotation           @relation(fields: [quotation_id], references: [id])
+  quotation_id Int
+  total_amount Float               @default(0)
+  status       String              @default("Pending")
+  notes        String?
+  items        PurchaseOrderItem[]
+  invoices     Invoice[]
+  created_at   DateTime            @default(now())
+  updated_at   DateTime            @updatedAt
+}
+
+model PurchaseOrderItem {
+  id             Int           @id @default(autoincrement())
+  purchase_order PurchaseOrder @relation(fields: [po_id], references: [id])
+  po_id          Int
+  description    String
+  quantity       Int           @default(1)
+  unit_price     Float         @default(0)
+  total_price    Float         @default(0)
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
 }
 
 model Invoice {
   id             Int           @id @default(autoincrement())
   invoice_number String        @unique
+  invoice_date   DateTime      @default(now())
+  due_date       DateTime?
   purchase_order PurchaseOrder @relation(fields: [po_id], references: [id])
   po_id          Int
-  tax_amount     Float
-  grand_total    Float
-  status         String
+  subtotal       Float         @default(0)
+  cgst           Float         @default(0)
+  sgst           Float         @default(0)
+  tax_amount     Float         @default(0)
+  grand_total    Float         @default(0)
+  status         String        @default("Pending")
+  notes          String?
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
 }
@@ -120,21 +143,21 @@ model RFQLineItem {
 }
 
 model RFQVendorAssignment {
-  id         Int      @id @default(autoincrement())
-  rfq        RFQ      @relation(fields: [rfq_id], references: [id])
-  rfq_id     Int
-  vendor     Vendor   @relation(fields: [vendor_id], references: [id])
-  vendor_id  Int
+  id          Int      @id @default(autoincrement())
+  rfq         RFQ      @relation(fields: [rfq_id], references: [id])
+  rfq_id      Int
+  vendor      Vendor   @relation(fields: [vendor_id], references: [id])
+  vendor_id   Int
   assigned_at DateTime @default(now())
 }
 
 model RFQAttachment {
-  id         Int      @id @default(autoincrement())
-  rfq        RFQ      @relation(fields: [rfq_id], references: [id])
-  rfq_id     Int
-  file_name  String
-  file_url   String
-  file_type  String?
-  file_size  Int?
+  id          Int      @id @default(autoincrement())
+  rfq         RFQ      @relation(fields: [rfq_id], references: [id])
+  rfq_id      Int
+  file_name   String
+  file_url    String
+  file_type   String?
+  file_size   Int?
   uploaded_at DateTime @default(now())
 }
