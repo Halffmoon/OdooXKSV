@@ -272,6 +272,41 @@ app.post('/api/vendors', async (req, res) => {
   }
 });
 
+app.put('/api/vendors/:id', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Vendor APIs are not available right now.' });
+  }
+
+  const vendorId = Number(req.params.id);
+  const { company_name, gst_number, category, status, contact_name, contact_email, contact_phone } = req.body;
+
+  if (!vendorId || !company_name || !gst_number || !category || !status) {
+    return res.status(400).json({ error: 'Missing required vendor fields.' });
+  }
+
+  try {
+    const vendor = await prisma.vendor.update({
+      where: { id: vendorId },
+      data: {
+        company_name: company_name.trim(),
+        gst_number: gst_number.trim(),
+        category: category.trim(),
+        status: status.trim(),
+        contact_name: contact_name?.trim() ?? null,
+        contact_email: contact_email?.trim() ?? null,
+        contact_phone: contact_phone?.trim() ?? null,
+      },
+    });
+    res.json({ vendor });
+  } catch (err) {
+    console.error('Error updating vendor', err);
+    if (err && err.code === 'P2002') {
+      return res.status(400).json({ error: 'A vendor with this GST number already exists.' });
+    }
+    res.status(500).json({ error: 'Unable to update vendor' });
+  }
+});
+
 app.get('/api/rfqs', async (req, res) => {
   if (!prismaConnected) {
     return res.status(503).json({ error: 'Database unavailable. RFQ APIs are not available right now.' });

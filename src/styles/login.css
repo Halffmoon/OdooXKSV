@@ -111,16 +111,11 @@
   gap: 14px;
 }
 
-.brand-circle {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  color: white;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  font-size: 1.1rem;
+.auth-brand-logo {
+  width: 92px;
+  max-width: 100%;
+  height: auto;
+  display: block;
   margin-bottom: 0;
 }
 

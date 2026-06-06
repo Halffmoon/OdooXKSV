@@ -55,14 +55,19 @@
 }
 
 .brand-logo {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #1428a0 0%, #4b7fff 100%);
-  display: grid;
-  place-items: center;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(20, 40, 160, 0.25);
+}
+
+.brand-logo-image {
+  width: 88px;
+  max-width: 88px;
+  height: auto;
+  display: block;
 }
 
 .brand-text {

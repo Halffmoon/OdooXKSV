@@ -13,6 +13,8 @@ function VendorPage({ apiBase, user, onNavigate }) {
     contact_phone: '',
   });
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [selectedVendor, setSelectedVendor] = useState(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [vendors, setVendors] = useState([]);
@@ -40,9 +42,17 @@ function VendorPage({ apiBase, user, onNavigate }) {
     setError('');
     setMessage('');
 
+    const method = modalMode === 'edit' ? 'PUT' : 'POST';
+    const submitUrl = modalMode === 'edit' && selectedVendor ? `${apiBase}/vendors/${selectedVendor.id}` : `${apiBase}/vendors`;
+
+    if (modalMode === 'edit' && !selectedVendor) {
+      setError('No vendor selected for editing.');
+      return;
+    }
+
     try {
-      const res = await fetch(`${apiBase}/vendors`, {
-        method: 'POST',
+      const res = await fetch(submitUrl, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
@@ -51,12 +61,13 @@ function VendorPage({ apiBase, user, onNavigate }) {
         setError(data.error || 'Unable to save vendor');
         return;
       }
-      setMessage('Vendor saved successfully');
+
+      setMessage(modalMode === 'edit' ? 'Vendor updated successfully' : 'Vendor saved successfully');
       setTimeout(() => {
-        setForm({ company_name: '', gst_number: '', category: '', status: 'Active', contact_name: '', contact_email: '', contact_phone: '' });
+        resetForm();
         setShowModal(false);
         fetchVendors();
-      }, 1500);
+      }, 1000);
     } catch (err) {
       console.error(err);
       setError('Unable to save vendor');
@@ -71,12 +82,48 @@ function VendorPage({ apiBase, user, onNavigate }) {
 
   const openAddModal = () => {
     resetForm();
+    setSelectedVendor(null);
+    setModalMode('add');
+    setShowModal(true);
+  };
+
+  const openViewVendor = (vendor) => {
+    setSelectedVendor(vendor);
+    setForm({
+      company_name: vendor.company_name || '',
+      gst_number: vendor.gst_number || '',
+      category: vendor.category || '',
+      status: vendor.status || 'Active',
+      contact_name: vendor.contact_name || '',
+      contact_email: vendor.contact_email || '',
+      contact_phone: vendor.contact_phone || '',
+    });
+    setModalMode('view');
+    setShowModal(true);
+  };
+
+  const openEditVendor = (vendor) => {
+    setSelectedVendor(vendor);
+    setForm({
+      company_name: vendor.company_name || '',
+      gst_number: vendor.gst_number || '',
+      category: vendor.category || '',
+      status: vendor.status || 'Active',
+      contact_name: vendor.contact_name || '',
+      contact_email: vendor.contact_email || '',
+      contact_phone: vendor.contact_phone || '',
+    });
+    setModalMode('edit');
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     resetForm();
+    setSelectedVendor(null);
+    setModalMode('add');
+    setMessage('');
+    setError('');
   };
 
   const filteredVendors = vendors.filter((vendor) => {
@@ -189,8 +236,12 @@ function VendorPage({ apiBase, user, onNavigate }) {
                       </span>
                     </td>
                     <td className="action-cell">
-                      <button className="action-btn view-btn" title="View">👁️</button>
-                      <button className="action-btn edit-btn" title="Edit">✏️</button>
+                      <button className="action-btn view-btn" title="View" onClick={() => openViewVendor(vendor)}>
+                        👁️
+                      </button>
+                      <button className="action-btn edit-btn" title="Edit" onClick={() => openEditVendor(vendor)}>
+                        ✏️
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -209,7 +260,11 @@ function VendorPage({ apiBase, user, onNavigate }) {
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Add New Vendor</h2>
+              <h2>
+                {modalMode === 'view' && 'Vendor Details'}
+                {modalMode === 'edit' && 'Edit Vendor'}
+                {modalMode === 'add' && 'Add New Vendor'}
+              </h2>
               <button className="modal-close" onClick={closeModal}>×</button>
             </div>
 
@@ -223,6 +278,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     onChange={(e) => handleChange('company_name', e.target.value)} 
                     placeholder="Enter company name"
                     required 
+                    disabled={modalMode === 'view'}
                   />
                 </div>
 
@@ -234,6 +290,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     onChange={(e) => handleChange('gst_number', e.target.value)} 
                     placeholder="e.g., 27AADCR..."
                     required 
+                    disabled={modalMode === 'view'}
                   />
                 </div>
 
@@ -245,6 +302,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     onChange={(e) => handleChange('category', e.target.value)} 
                     placeholder="e.g., Constructions, IT, Logistics"
                     required 
+                    disabled={modalMode === 'view'}
                   />
                 </div>
 
@@ -253,6 +311,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                   <select 
                     value={form.status} 
                     onChange={(e) => handleChange('status', e.target.value)}
+                    disabled={modalMode === 'view'}
                   >
                     <option>Active</option>
                     <option>Pending</option>
@@ -267,6 +326,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     value={form.contact_name} 
                     onChange={(e) => handleChange('contact_name', e.target.value)}
                     placeholder="Contact person name"
+                    disabled={modalMode === 'view'}
                   />
                 </div>
 
@@ -277,6 +337,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     value={form.contact_email} 
                     onChange={(e) => handleChange('contact_email', e.target.value)}
                     placeholder="email@company.com"
+                    disabled={modalMode === 'view'}
                   />
                 </div>
 
@@ -287,6 +348,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
                     value={form.contact_phone} 
                     onChange={(e) => handleChange('contact_phone', e.target.value)}
                     placeholder="+91 XXXXXXXXXX"
+                    disabled={modalMode === 'view'}
                   />
                 </div>
               </div>
@@ -295,8 +357,26 @@ function VendorPage({ apiBase, user, onNavigate }) {
               {error && <div className="alert alert-error">{error}</div>}
 
               <div className="form-actions">
-                <button type="button" className="btn-secondary" onClick={closeModal}>Cancel</button>
-                <button type="submit" className="btn-primary">Save Vendor</button>
+                <button type="button" className="btn-secondary" onClick={closeModal}>
+                  {modalMode === 'view' ? 'Close' : 'Cancel'}
+                </button>
+                {modalMode === 'view' ? (
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => {
+                      setModalMode('edit');
+                      setMessage('');
+                      setError('');
+                    }}
+                  >
+                    Edit Vendor
+                  </button>
+                ) : (
+                  <button type="submit" className="btn-primary">
+                    {modalMode === 'edit' ? 'Save Changes' : 'Save Vendor'}
+                  </button>
+                )}
               </div>
             </form>
           </div>

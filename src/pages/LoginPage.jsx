@@ -20,7 +20,7 @@ function LoginPage({ form, onChange, onSubmit, onSwitchToSignup, onForgotPasswor
 
         <div className="auth-card">
           <div className="brand-row">
-            <div className="brand-circle">VB</div>
+            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
           </div>
           <h1>Sign in</h1>
           <p>Enter your credentials to continue to the VendorBridge procurement suite.</p>

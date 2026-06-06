@@ -1,0 +1,25 @@
+<svg viewBox="0 0 360 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">VendorBridge logo</title>
+  <desc id="logoDesc">Professional VendorBridge logo with a modern bridge mark and text.</desc>
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f3274" />
+      <stop offset="100%" stop-color="#3f7dff" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5aa1ff" />
+      <stop offset="100%" stop-color="#c8dbff" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(10,18)">
+    <path d="M8 54 C8 30 28 18 48 18 C68 18 88 30 88 54" fill="none" stroke="url(#blueGrad)" stroke-width="12" stroke-linecap="round" />
+    <path d="M48 18 C72 18 88 34 88 54" fill="none" stroke="url(#accentGrad)" stroke-width="12" stroke-linecap="round" opacity="0.85" />
+    <circle cx="20" cy="50" r="4" fill="url(#accentGrad)" />
+    <circle cx="80" cy="46" r="4" fill="url(#accentGrad)" />
+  </g>
+  <g transform="translate(118,30)">
+    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#0f3274">Vendor</text>
+    <text x="0" y="32" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#1f52c5">Bridge</text>
+    <text x="0" y="56" font-family="Inter, sans-serif" font-weight="500" font-size="12" fill="#5f759a" letter-spacing="0.12em">Enterprise Resource Planning</text>
+  </g>
+</svg>

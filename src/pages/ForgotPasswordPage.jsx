@@ -34,7 +34,7 @@ function ForgotPasswordPage({
 
         <div className="auth-card">
           <div className="brand-row">
-            <div className="brand-circle">VB</div>
+            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
           </div>
           <h1>Recover account</h1>
           <p>Enter the details below to verify your identity and reset your VendorBridge password.</p>

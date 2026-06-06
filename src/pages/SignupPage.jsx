@@ -20,7 +20,7 @@ function SignupPage({ signup, onChange, onSubmit, onSwitchToLogin, error, messag
 
         <div className="auth-card">
           <div className="brand-row">
-            <div className="brand-circle">VB</div>
+            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
           </div>
           <h1>Create your VendorBridge Management account</h1>
           <p>Create your VendorBridge account to manage procurement, suppliers, approvals, and spend from a single, polished dashboard.</p>
