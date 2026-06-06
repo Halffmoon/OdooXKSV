@@ -287,30 +287,32 @@ function RFQPage({ apiBase, onBack }) {
 
       <section className="rfq-table-card">
         <div className="card-title">RFQ database details</div>
-        <table className="rfq-table">
-          <thead>
-            <tr>
-              <th>RFQ</th>
-              <th>Category</th>
-              <th>Deadline</th>
-              <th>Line items</th>
-              <th>Assigned vendors</th>
-              <th>Attachments</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rfqs.map((rfq) => (
-              <tr key={rfq.id}>
-                <td>{rfq.title}</td>
-                <td>{rfq.category}</td>
-                <td>{new Date(rfq.deadline).toLocaleDateString()}</td>
-                <td>{rfq.line_items?.length || 0}</td>
-                <td>{rfq.assigned_vendors?.length || 0}</td>
-                <td>{rfq.attachments?.length || 0}</td>
+        <div className="rfq-table-wrapper">
+          <table className="rfq-table">
+            <thead>
+              <tr>
+                <th>RFQ</th>
+                <th>Category</th>
+                <th>Deadline</th>
+                <th>Line items</th>
+                <th>Assigned vendors</th>
+                <th>Attachments</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rfqs.map((rfq) => (
+                <tr key={rfq.id}>
+                  <td>{rfq.title}</td>
+                  <td>{rfq.category}</td>
+                  <td>{new Date(rfq.deadline).toLocaleDateString()}</td>
+                  <td>{rfq.line_items?.length || 0}</td>
+                  <td>{rfq.assigned_vendors?.length || 0}</td>
+                  <td>{rfq.attachments?.length || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
   );
