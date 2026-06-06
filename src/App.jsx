@@ -8,6 +8,7 @@ import QuotationPage from './pages/QuotationPage.jsx';
 import ApprovalPage from './pages/ApprovalPage.jsx';
 import POInvoicePage from './pages/POInvoicePage.jsx';
 import ReportPage from './pages/ReportPage.jsx';
+import ActivityPage from './pages/ActivityPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -288,6 +289,14 @@ function App() {
 
       {page === 'reports' && user && (
         <ReportPage
+          user={user}
+          onNavigate={switchPage}
+          onLogout={handleLogout}
+        />
+      )}
+
+      {page === 'activity' && user && (
+        <ActivityPage
           user={user}
           onNavigate={switchPage}
           onLogout={handleLogout}

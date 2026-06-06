@@ -145,8 +145,8 @@ function RFQPage({ apiBase, user, onNavigate, onLogout }) {
   ];
 
   return (
-    <div className="rfq-container">
-      <Sidebar user={user} activePage="rfq" onNavigate={onNavigate} onLogout={onLogout} />
+    <div className="rfq-dashboard-container">
+      <Sidebar user={user} activePage="rfqs" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="rfq-dashboard-main">
         {/* Header */}
