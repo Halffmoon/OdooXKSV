@@ -409,12 +409,176 @@ app.get('/api/quotations', async (req, res) => {
       include: {
         rfq: true,
         vendor: true,
+        items: true,
       },
     });
     res.json({ quotations });
   } catch (err) {
     console.error('Error fetching quotations', err);
     res.status(500).json({ error: 'Unable to fetch quotations' });
+  }
+});
+
+app.get('/api/quotations/:id', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Quotation APIs are not available right now.' });
+  }
+
+  try {
+    const quotationId = Number(req.params.id);
+    if (!quotationId) {
+      return res.status(400).json({ error: 'Invalid quotation id.' });
+    }
+
+    const quotation = await prisma.quotation.findUnique({
+      where: { id: quotationId },
+      include: {
+        rfq: true,
+        vendor: true,
+        items: true,
+        approvals: true,
+      },
+    });
+
+    if (!quotation) {
+      return res.status(404).json({ error: 'Quotation not found.' });
+    }
+
+    res.json({ quotation });
+  } catch (err) {
+    console.error('Error fetching quotation', err);
+    res.status(500).json({ error: 'Unable to fetch quotation' });
+  }
+});
+
+app.get('/api/approvals', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Approval APIs are not available right now.' });
+  }
+
+  try {
+    const quotationId = req.query.quotation_id ? Number(req.query.quotation_id) : null;
+    const approvals = await prisma.approval.findMany({
+      where: quotationId ? { quotation_id: quotationId } : undefined,
+      include: {
+        quotation: true,
+      },
+      orderBy: { created_at: 'desc' },
+    });
+    res.json({ approvals });
+  } catch (err) {
+    console.error('Error fetching approvals', err);
+    res.status(500).json({ error: 'Unable to fetch approvals' });
+  }
+});
+
+app.get('/api/approvals/:id', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Approval APIs are not available right now.' });
+  }
+
+  try {
+    const approvalId = Number(req.params.id);
+    if (!approvalId) {
+      return res.status(400).json({ error: 'Invalid approval id.' });
+    }
+
+    const approval = await prisma.approval.findUnique({
+      where: { id: approvalId },
+      include: {
+        quotation: true,
+      },
+    });
+
+    if (!approval) {
+      return res.status(404).json({ error: 'Approval not found.' });
+    }
+
+    res.json({ approval });
+  } catch (err) {
+    console.error('Error fetching approval', err);
+    res.status(500).json({ error: 'Unable to fetch approval' });
+  }
+});
+
+app.post('/api/approvals', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Approval APIs are not available right now.' });
+  }
+
+  const { quotation_id, approval_id, status, remarks } = req.body;
+  if (!quotation_id || !approval_id || !status) {
+    return res.status(400).json({ error: 'Missing required approval fields.' });
+  }
+
+  try {
+    const approval = await prisma.approval.create({
+      data: {
+        quotation: { connect: { id: Number(quotation_id) } },
+        approval_id: approval_id.trim(),
+        status: status.trim(),
+        remarks: remarks?.trim() ?? null,
+      },
+      include: {
+        quotation: true,
+      },
+    });
+    res.json({ approval });
+  } catch (err) {
+    console.error('Error creating approval', err);
+    res.status(500).json({ error: 'Unable to create approval' });
+  }
+});
+
+app.post('/api/quotation-items', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Quotation item APIs are not available right now.' });
+  }
+
+  const { quotation_id, unit_price, total_price, description } = req.body;
+
+  if (!quotation_id || unit_price == null || total_price == null) {
+    return res.status(400).json({ error: 'Missing required quotation item fields.' });
+  }
+
+  try {
+    const item = await prisma.quotationItem.create({
+      data: {
+        quotation: { connect: { id: Number(quotation_id) } },
+        unit_price: Number(unit_price),
+        total_price: Number(total_price),
+        description: description?.trim() ?? null,
+      },
+      include: {
+        quotation: true,
+      },
+    });
+    res.json({ item });
+  } catch (err) {
+    console.error('Error creating quotation item', err);
+    res.status(500).json({ error: 'Unable to create quotation item' });
+  }
+});
+
+app.get('/api/quotation-items', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Quotation item APIs are not available right now.' });
+  }
+
+  try {
+    const quotationId = req.query.quotation_id ? Number(req.query.quotation_id) : null;
+    const items = await prisma.quotationItem.findMany({
+      where: quotationId ? { quotation_id: quotationId } : undefined,
+      include: {
+        quotation: true,
+      },
+      orderBy: { created_at: 'desc' },
+    });
+
+    res.json({ items });
+  } catch (err) {
+    console.error('Error fetching quotation items', err);
+    res.status(500).json({ error: 'Unable to fetch quotation items' });
   }
 });
 
