@@ -1,4 +1,4 @@
-function DashboardPage({ user, stats, orders, onLogout }) {
+function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
   const navItems = user?.role === 'Admin'
     ? ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'Purchase orders', 'Invoices', 'Reports', 'Activity']
     : ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Purchase orders', 'Invoices', 'Reports', 'Activity'];
@@ -11,7 +11,11 @@ function DashboardPage({ user, stats, orders, onLogout }) {
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
-            <button key={item} className="nav-item">
+            <button
+              key={item}
+              className="nav-item"
+              onClick={() => onNavigate && onNavigate(item === 'Vendors' ? 'vendors' : 'dashboard')}
+            >
               {item}
             </button>
           ))}
@@ -81,7 +85,7 @@ function DashboardPage({ user, stats, orders, onLogout }) {
           <button className="ghost-btn" onClick={() => alert('New RFQ flow coming soon')}>
             + New RFQ
           </button>
-          <button className="ghost-btn" onClick={() => alert('Add Vendor flow coming soon')}>
+          <button className="ghost-btn" onClick={() => onNavigate && onNavigate('vendors')}>
             Add Vendor
           </button>
           <button className="ghost-btn" onClick={() => alert('View invoices flow coming soon')}>
