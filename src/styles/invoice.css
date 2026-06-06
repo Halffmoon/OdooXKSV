@@ -1,0 +1,279 @@
+/* Wireframe specific styles for Invoice Page */
+
+.wireframe-detail-card {
+  background: white;
+  border-radius: 8px;
+  padding: 32px;
+  border: 2px solid #2b3935;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+}
+
+.wireframe-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.wireframe-title-area h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  color: #2b3935;
+}
+
+.wireframe-title-area h3 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0;
+  color: #4a5568;
+}
+
+.wireframe-btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.wf-btn {
+  background: white;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #4a5568;
+  transition: all 0.2s;
+}
+
+.wf-btn:hover {
+  background: #f7fafc;
+  border-color: #a0aec0;
+}
+
+.wireframe-info-box {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.wf-info-row {
+  display: flex;
+  padding: 16px 24px;
+}
+
+.wf-info-col {
+  flex: 1;
+}
+
+.wf-info-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 12px;
+}
+
+.wf-address strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #2d3748;
+}
+
+.wf-address p {
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.wf-divider {
+  height: 1px;
+  background: #cbd5e0;
+  width: 100%;
+}
+
+.wf-meta-row {
+  padding: 16px 24px;
+}
+
+.wf-meta-line {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  color: #2d3748;
+}
+
+.wf-meta-line span {
+  color: #718096;
+  display: inline-block;
+  min-width: 90px;
+}
+
+.wireframe-table-box {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.wf-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wf-table th {
+  padding: 16px 24px;
+  border-bottom: 1px solid #cbd5e0;
+  border-right: 1px solid #cbd5e0;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4a5568;
+  text-align: left;
+}
+
+.wf-table th:last-child {
+  border-right: none;
+}
+
+.wf-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #cbd5e0;
+  border-right: 1px solid #cbd5e0;
+  font-size: 0.9rem;
+  color: #2d3748;
+}
+
+.wf-table td:last-child {
+  border-right: none;
+}
+
+.wf-total-row td {
+  padding: 12px 24px;
+}
+
+.wf-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.wireframe-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wf-status-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wf-status-label {
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.wf-status-badge {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.wf-status-badge.pending {
+  background: #fefcbf;
+  color: #b7791f;
+}
+
+.wf-status-badge.approved, .wf-status-badge.paid {
+  background: #c6f6d5;
+  color: #2f855a;
+}
+
+.wf-status-badge.rejected {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.wf-link-btn {
+  background: none;
+  border: none;
+  color: #3182ce;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.wf-link-btn:hover {
+  color: #2b6cb0;
+}
+
+.btn-mark-paid {
+  background: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-left: 12px;
+}
+
+.btn-mark-paid:hover {
+  background: #2b6cb0;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(49, 130, 206, 0.2);
+}
+
+.wf-approval-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-approve {
+  background: #48bb78;
+  color: white;
+  border-color: #48bb78;
+}
+
+.btn-approve:hover {
+  background: #38a169;
+}
+
+.btn-reject {
+  background: #f56565;
+  color: white;
+  border-color: #f56565;
+}
+
+.btn-reject:hover {
+  background: #e53e3e;
+}
+
+/* Print specific styles to only show the detail card */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .wireframe-detail-card, .wireframe-detail-card * {
+    visibility: visible;
+  }
+  .wireframe-detail-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+  .wireframe-header-actions .wireframe-btn-group,
+  .wireframe-footer .wf-approval-actions,
+  .wireframe-footer .wf-link-btn {
+    display: none !important;
+  }
+}
