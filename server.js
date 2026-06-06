@@ -587,7 +587,7 @@ app.post('/api/quotations', async (req, res) => {
     return res.status(503).json({ error: 'Database unavailable. Quotation APIs are not available right now.' });
   }
 
-  const { rfq_id, vendor_id, total_amount, delivery_days, status } = req.body;
+  const { rfq_id, vendor_id, total_amount, delivery_days, status, line_items } = req.body;
   if (!rfq_id || !vendor_id || !total_amount || !delivery_days || !status) {
     return res.status(400).json({ error: 'Missing required quotation fields.' });
   }
@@ -600,10 +600,20 @@ app.post('/api/quotations', async (req, res) => {
         total_amount: Number(total_amount),
         delivery_days: Number(delivery_days),
         status: status.trim(),
+        items: {
+          create: (Array.isArray(line_items) ? line_items : []).map((li) => ({
+            description: li.description || '',
+            quantity: Number(li.quantity) || 1,
+            unit: li.unit || 'NOS',
+            unit_price: Number(li.unit_price) || 0,
+            total_price: Number(li.total_price) || 0,
+          })),
+        },
       },
       include: {
         rfq: true,
         vendor: true,
+        items: true,
       },
     });
     res.json({ quotation });
@@ -612,6 +622,221 @@ app.post('/api/quotations', async (req, res) => {
     res.status(500).json({ error: 'Unable to create quotation' });
   }
 });
+
+// ── Approve a quotation: creates Approval record + PO + Invoice ──
+app.post('/api/quotations/:id/approve', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable.' });
+  }
+  const quotationId = Number(req.params.id);
+  const { remarks } = req.body;
+  if (!quotationId) return res.status(400).json({ error: 'Invalid quotation id.' });
+
+  try {
+    // Fetch full quotation
+    const quotation = await prisma.quotation.findUnique({
+      where: { id: quotationId },
+      include: { rfq: true, vendor: true, items: true },
+    });
+    if (!quotation) return res.status(404).json({ error: 'Quotation not found.' });
+
+    // Create Approval record
+    const approval = await prisma.approval.create({
+      data: {
+        quotation: { connect: { id: quotationId } },
+        approval_id: `APR-${Date.now()}`,
+        status: 'Approved',
+        remarks: remarks?.trim() ?? null,
+      },
+    });
+
+    // Auto-generate PO number
+    const poCount = await prisma.purchaseOrder.count();
+    const poNumber = `PO-${new Date().getFullYear()}-${String(poCount + 1).padStart(4, '0')}`;
+
+    // Create Purchase Order
+    const po = await prisma.purchaseOrder.create({
+      data: {
+        po_number: poNumber,
+        quotation: { connect: { id: quotationId } },
+        total_amount: quotation.total_amount,
+        status: 'Approved',
+        items: {
+          create: (quotation.items || []).map((item) => ({
+            description: item.description || 'Procurement Item',
+            quantity: item.quantity || 1,
+            unit_price: item.unit_price || 0,
+            total_price: item.total_price || 0,
+          })),
+        },
+      },
+    });
+
+    // Auto-generate Invoice number
+    const invCount = await prisma.invoice.count();
+    const invoiceNumber = `INV-${new Date().getFullYear()}-${String(invCount + 1).padStart(4, '0')}`;
+    const cgst = quotation.total_amount * 0.09;
+    const sgst = quotation.total_amount * 0.09;
+    const taxAmount = cgst + sgst;
+    const grandTotal = quotation.total_amount + taxAmount;
+
+    // Create Invoice
+    const invoice = await prisma.invoice.create({
+      data: {
+        invoice_number: invoiceNumber,
+        purchase_order: { connect: { id: po.id } },
+        subtotal: quotation.total_amount,
+        cgst,
+        sgst,
+        tax_amount: taxAmount,
+        grand_total: grandTotal,
+        status: 'Pending Approval',
+      },
+    });
+
+    // Update quotation status to Approved
+    await prisma.quotation.update({
+      where: { id: quotationId },
+      data: { status: 'Approved' },
+    });
+
+    res.json({ approval, po, invoice, message: 'Quotation approved. PO and Bill generated and pending approval.' });
+  } catch (err) {
+    console.error('Error approving quotation', err);
+    res.status(500).json({ error: 'Unable to approve quotation.' });
+  }
+});
+
+// ── Reject a quotation ──
+app.post('/api/quotations/:id/reject', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable.' });
+  }
+  const quotationId = Number(req.params.id);
+  const { remarks } = req.body;
+  if (!quotationId) return res.status(400).json({ error: 'Invalid quotation id.' });
+
+  try {
+    const approval = await prisma.approval.create({
+      data: {
+        quotation: { connect: { id: quotationId } },
+        approval_id: `APR-${Date.now()}`,
+        status: 'Rejected',
+        remarks: remarks?.trim() ?? null,
+      },
+    });
+
+    await prisma.quotation.update({
+      where: { id: quotationId },
+      data: { status: 'Rejected' },
+    });
+
+    res.json({ approval, message: 'Quotation rejected.' });
+  } catch (err) {
+    console.error('Error rejecting quotation', err);
+    res.status(500).json({ error: 'Unable to reject quotation.' });
+  }
+});
+
+// ── Purchase Orders ──
+app.get('/api/purchase-orders', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable.' });
+  }
+  try {
+    const pos = await prisma.purchaseOrder.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        items: true,
+        quotation: { include: { rfq: true, vendor: true } },
+        invoices: true,
+      },
+    });
+    res.json({ purchase_orders: pos });
+  } catch (err) {
+    console.error('Error fetching purchase orders', err);
+    res.status(500).json({ error: 'Unable to fetch purchase orders' });
+  }
+});
+
+// ── Invoices ──
+app.get('/api/invoices', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable.' });
+  }
+  try {
+    const invoices = await prisma.invoice.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        purchase_order: {
+          include: {
+            items: true,
+            quotation: { include: { rfq: true, vendor: true } },
+          },
+        },
+      },
+    });
+    res.json({ invoices });
+  } catch (err) {
+    console.error('Error fetching invoices', err);
+    res.status(500).json({ error: 'Unable to fetch invoices' });
+  }
+});
+
+// ── Approve Bill (Invoice) ──
+app.post('/api/invoices/:id/approve', async (req, res) => {
+  if (!prismaConnected) return res.status(503).json({ error: 'Database unavailable.' });
+  const invoiceId = Number(req.params.id);
+  if (!invoiceId) return res.status(400).json({ error: 'Invalid invoice id.' });
+
+  try {
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: { status: 'Pending Payment' },
+    });
+    res.json({ invoice: updatedInvoice, message: 'Bill approved and generated.' });
+  } catch (err) {
+    console.error('Error approving invoice', err);
+    res.status(500).json({ error: 'Unable to approve bill.' });
+  }
+});
+
+// ── Reject Bill (Invoice) ──
+app.post('/api/invoices/:id/reject', async (req, res) => {
+  if (!prismaConnected) return res.status(503).json({ error: 'Database unavailable.' });
+  const invoiceId = Number(req.params.id);
+  if (!invoiceId) return res.status(400).json({ error: 'Invalid invoice id.' });
+
+  try {
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: { status: 'Rejected' },
+    });
+    res.json({ invoice: updatedInvoice, message: 'Bill rejected.' });
+  } catch (err) {
+    console.error('Error rejecting invoice', err);
+    res.status(500).json({ error: 'Unable to reject bill.' });
+  }
+});
+
+// ── Pay Bill (Invoice) ──
+app.post('/api/invoices/:id/pay', async (req, res) => {
+  if (!prismaConnected) return res.status(503).json({ error: 'Database unavailable.' });
+  const invoiceId = Number(req.params.id);
+  if (!invoiceId) return res.status(400).json({ error: 'Invalid invoice id.' });
+
+  try {
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: { status: 'Paid' },
+    });
+    res.json({ invoice: updatedInvoice, message: 'Bill marked as Paid.' });
+  } catch (err) {
+    console.error('Error paying invoice', err);
+    res.status(500).json({ error: 'Unable to update payment status.' });
+  }
+});
+
 
 await ensureDataFiles();
 

@@ -1,5 +1,45 @@
 [
   {
+    "firstName": "Hetvi",
+    "lastName": "",
+    "email": "hetvi@gmail.com",
+    "phone": "",
+    "role": "Officer",
+    "country": "",
+    "password": "h12345",
+    "extra": ""
+  },
+  {
+    "firstName": "Heny",
+    "lastName": "Patel",
+    "email": "heny@gmail.com",
+    "phone": "9016809674",
+    "role": "Vendor",
+    "country": "India",
+    "password": "h12345",
+    "extra": ""
+  },
+  {
+    "firstName": "Henit",
+    "lastName": "Panchal",
+    "email": "henit@gmail.com",
+    "phone": "9016809674",
+    "role": "Manager",
+    "country": "India",
+    "password": "h12345",
+    "extra": ""
+  },
+  {
+    "firstName": "krish",
+    "lastName": "",
+    "email": "krish2@gmail.com",
+    "phone": "",
+    "role": "Officer",
+    "country": "",
+    "password": "k12345",
+    "extra": ""
+  },
+  {
     "firstName": "Mihir",
     "lastName": "Patel",
     "email": "mihir@gmail.com",

@@ -281,6 +281,7 @@ function App() {
 
       {page === 'po-invoice' && user && (
         <POInvoicePage
+          apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
           onLogout={handleLogout}

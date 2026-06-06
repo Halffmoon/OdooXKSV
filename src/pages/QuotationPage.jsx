@@ -162,6 +162,13 @@ function QuotationPage({ apiBase, user, onNavigate, onLogout }) {
           total_amount: grandTotal,
           delivery_days: maxDelivery,
           status: form.status,
+          line_items: form.line_items.map((li) => ({
+            description: li.item,
+            quantity: Number(li.quantity) || 1,
+            unit: li.unit || 'NOS',
+            unit_price: Number(li.unit_price) || 0,
+            total_price: (Number(li.quantity) || 0) * (Number(li.unit_price) || 0),
+          })),
         }),
       });
       const data = await res.json();
@@ -318,11 +325,11 @@ function QuotationPage({ apiBase, user, onNavigate, onLogout }) {
                       <div className="quot-line-table">
                         <div className="quot-line-header quot-line-header-vendor">
                           <span>Item</span>
-                          <span>Qty</span>
-                          <span>Unit</span>
-                          <span>Unit Price (₹) *</span>
-                          <span>Total (₹)</span>
-                          <span>Delivery (days) *</span>
+                          <span className="quot-hdr-center">Qty</span>
+                          <span className="quot-hdr-center">Unit</span>
+                          <span className="quot-hdr-center">Unit Price<br/><small style={{fontWeight:400,textTransform:'none',letterSpacing:0,fontSize:'0.65rem'}}>(per 1 unit)</small></span>
+                          <span className="quot-hdr-center">Total<br/><small style={{fontWeight:400,textTransform:'none',letterSpacing:0,fontSize:'0.65rem'}}>(auto-calc)</small></span>
+                          <span className="quot-hdr-center">Delivery<br/><small style={{fontWeight:400,textTransform:'none',letterSpacing:0,fontSize:'0.65rem'}}>(days)</small></span>
                         </div>
 
                         {form.line_items.map((li, idx) => (
@@ -343,23 +350,26 @@ function QuotationPage({ apiBase, user, onNavigate, onLogout }) {
                               {li.unit}
                             </div>
 
-                            {/* Unit Price — editable by vendor */}
-                            <input
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              value={li.unit_price}
-                              onChange={(e) => handleLineChange(idx, 'unit_price', e.target.value)}
-                              placeholder="Enter price"
-                              className="quot-price-input"
-                              required
-                            />
+                            {/* Unit Price — editable by vendor, price for 1 unit */}
+                            <div className="quot-price-input-wrap">
+                              <span className="quot-price-prefix">₹</span>
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={li.unit_price}
+                                onChange={(e) => handleLineChange(idx, 'unit_price', e.target.value)}
+                                placeholder="0.00"
+                                className="quot-price-input"
+                                required
+                              />
+                              <span className="quot-price-suffix">/unit</span>
+                            </div>
 
-                            {/* Row total */}
-                            <div className="quot-line-total">
-                              {li.unit_price
-                                ? `₹${((Number(li.quantity) || 0) * (Number(li.unit_price) || 0)).toLocaleString()}`
-                                : '—'}
+                            {/* Row total — auto-calculated (qty × unit_price), NOT editable */}
+                            <div className="quot-line-total-auto">
+                              <span className="quot-auto-tag">auto</span>
+                              ₹{((Number(li.quantity) || 0) * (Number(li.unit_price) || 0)).toLocaleString()}
                             </div>
 
                             {/* Delivery days — editable by vendor */}

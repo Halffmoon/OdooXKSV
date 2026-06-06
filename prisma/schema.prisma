@@ -71,6 +71,8 @@ model QuotationItem {
   unit_price   Float
   total_price  Float
   description  String?
+  quantity     Int       @default(1)
+  unit         String    @default("NOS")
   created_at   DateTime  @default(now())
   updated_at   DateTime  @updatedAt
 }
