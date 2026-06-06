@@ -291,7 +291,7 @@
 
 .rfq-line-item-row {
   display: grid;
-  grid-template-columns: 2fr 80px 80px auto;
+  grid-template-columns: 2fr 90px 110px auto;
   gap: 8px;
   align-items: center;
 }
@@ -311,6 +311,32 @@
 .rfq-line-item-row input:focus {
   outline: none;
   border-color: #1428a0;
+}
+
+/* Unit dropdown — matches the input style */
+.rfq-unit-select {
+  border: 1px solid #e0e5ec;
+  border-radius: 4px;
+  padding: 9px 10px;
+  font-size: 0.88rem;
+  color: #1c1c1c;
+  background: #fafbfc;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+  width: 100%;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 26px;
+}
+
+.rfq-unit-select:focus {
+  outline: none;
+  border-color: #1428a0;
+  box-shadow: 0 0 0 2px rgba(20,40,160,0.08);
 }
 
 .rfq-remove-btn {

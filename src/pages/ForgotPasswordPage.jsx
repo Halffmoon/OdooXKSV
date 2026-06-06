@@ -19,7 +19,17 @@ function ForgotPasswordPage({
 }) {
   useEffect(() => {
     document.body.classList.add('auth-page');
-    return () => document.body.classList.remove('auth-page');
+    // Prevent browser back from leaving the SPA — go to login instead
+    window.history.pushState(null, '', window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+      onBackToLogin();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      document.body.classList.remove('auth-page');
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   return (
@@ -28,6 +38,9 @@ function ForgotPasswordPage({
 
         {/* Left Hero */}
         <section className="auth-hero hero-forgot">
+          <div className="hero-logo-block">
+            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="hero-logo-img" />
+          </div>
           <div className="hero-copy">
             <span className="hero-pill">VendorBridge</span>
             <h1>Recover access to your procurement workspace.</h1>
@@ -51,78 +64,81 @@ function ForgotPasswordPage({
 
         {/* Right Auth Card */}
         <div className="auth-card">
-          <div className="brand-row">
-            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
-          </div>
-          <h1>{stage === 'verify' ? 'Recover account' : 'Set new password'}</h1>
-          <p>
-            {stage === 'verify'
-              ? 'Enter your registered email and phone number to verify your identity.'
-              : 'Choose a strong new password for your VendorBridge account.'}
-          </p>
+          <div className="auth-card-inner">
+            <div className="brand-row">
+              <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
+            </div>
 
-          <form onSubmit={stage === 'verify' ? onVerify : onResetPassword} className="auth-form">
-            {stage === 'verify' ? (
-              <>
-                <label>
-                  Email Address
-                  <input
-                    type="email"
-                    id="forgot-email"
-                    value={email}
-                    onChange={(e) => onEmailChange(e.target.value)}
-                    placeholder="Enter your registered email"
-                  />
-                </label>
-                <label>
-                  Phone Number
-                  <input
-                    type="text"
-                    id="forgot-phone"
-                    value={phone}
-                    onChange={(e) => onPhoneChange(e.target.value)}
-                    placeholder="Enter your registered phone"
-                  />
-                </label>
-              </>
-            ) : (
-              <>
-                <label>
-                  New Password
-                  <input
-                    type="password"
-                    id="forgot-new-password"
-                    value={resetPassword}
-                    onChange={(e) => onResetPasswordChange(e.target.value)}
-                    placeholder="Enter new password"
-                  />
-                </label>
-                <label>
-                  Confirm New Password
-                  <input
-                    type="password"
-                    id="forgot-confirm-password"
-                    value={resetConfirmPassword}
-                    onChange={(e) => onResetConfirmPasswordChange(e.target.value)}
-                    placeholder="Confirm new password"
-                  />
-                </label>
-              </>
-            )}
+            <h1>{stage === 'verify' ? 'Recover account' : 'Set new password'}</h1>
+            <p>
+              {stage === 'verify'
+                ? 'Enter your registered email and phone number to verify your identity.'
+                : 'Choose a strong new password for your VendorBridge account.'}
+            </p>
 
-            {message && <div className="form-message">{message}</div>}
-            {error && <div className="form-error">{error}</div>}
+            <form onSubmit={stage === 'verify' ? onVerify : onResetPassword} className="auth-form">
+              {stage === 'verify' ? (
+                <>
+                  <label>
+                    Email Address
+                    <input
+                      type="email"
+                      id="forgot-email"
+                      value={email}
+                      onChange={(e) => onEmailChange(e.target.value)}
+                      placeholder="Enter your registered email"
+                    />
+                  </label>
+                  <label>
+                    Phone Number
+                    <input
+                      type="text"
+                      id="forgot-phone"
+                      value={phone}
+                      onChange={(e) => onPhoneChange(e.target.value)}
+                      placeholder="Enter your registered phone"
+                    />
+                  </label>
+                </>
+              ) : (
+                <>
+                  <label>
+                    New Password
+                    <input
+                      type="password"
+                      id="forgot-new-password"
+                      value={resetPassword}
+                      onChange={(e) => onResetPasswordChange(e.target.value)}
+                      placeholder="Enter new password"
+                    />
+                  </label>
+                  <label>
+                    Confirm New Password
+                    <input
+                      type="password"
+                      id="forgot-confirm-password"
+                      value={resetConfirmPassword}
+                      onChange={(e) => onResetConfirmPasswordChange(e.target.value)}
+                      placeholder="Confirm new password"
+                    />
+                  </label>
+                </>
+              )}
 
-            <button type="submit" id="forgot-submit" className="primary-btn">
-              {stage === 'verify' ? 'Verify Identity' : 'Reset Password'}
-            </button>
-          </form>
+              {message && <div className="form-message">{message}</div>}
+              {error && <div className="form-error">{error}</div>}
 
-          <div className="auth-footer">
-            <span>Remember your password?</span>
-            <button className="text-btn" onClick={onBackToLogin}>
-              Back to Login
-            </button>
+              <button type="submit" id="forgot-submit" className="primary-btn">
+                {stage === 'verify' ? 'Verify Identity' : 'Reset Password'}
+              </button>
+            </form>
+
+            <div className="auth-footer">
+              <span>Remember your password?</span>
+              <button className="text-btn" onClick={onBackToLogin}>
+                Back to Login
+              </button>
+            </div>
           </div>
         </div>
 

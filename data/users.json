@@ -1,5 +1,15 @@
 [
   {
+    "firstName": "Krish",
+    "lastName": "Patel",
+    "email": "krish01@gmail.com",
+    "phone": "9328211453",
+    "role": "Manager",
+    "country": "India",
+    "password": "k@12345",
+    "extra": ""
+  },
+  {
     "firstName": "Mihir",
     "lastName": "Patel",
     "email": "mihir@gmail.com",

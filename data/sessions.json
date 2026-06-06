@@ -148,5 +148,29 @@
     "email": "henitpanchal007@gmail.com",
     "role": "Admin",
     "createdAt": "2026-06-06T07:40:30.090Z"
+  },
+  {
+    "sessionId": "411b1ef2-41b2-4ca6-8f3d-c0c34ed82052",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T09:55:43.944Z"
+  },
+  {
+    "sessionId": "fb0513c3-0ba6-4843-bf82-f784a1a496a9",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T10:04:18.962Z"
+  },
+  {
+    "sessionId": "3515e450-946f-4b3e-be86-c2104877c900",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T10:12:12.441Z"
+  },
+  {
+    "sessionId": "9ce2b360-03ce-4048-aafe-2ae31bf3605e",
+    "email": "krish01@gmail.com",
+    "role": "Manager",
+    "createdAt": "2026-06-06T10:19:15.460Z"
   }
 ]

@@ -185,7 +185,7 @@
   padding: 11px 12px;
   border: none;
   background: transparent;
-  color: #6b7280;
+  color: #1428a0;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -234,13 +234,15 @@
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: #9ca3af;
+  color: #1428a0;
   transition: all 0.18s ease;
 }
 
 .nav-label {
   flex: 1;
   white-space: nowrap;
+  color: #1428a0;
+  font-weight: 600;
 }
 
 .nav-active-dot {
