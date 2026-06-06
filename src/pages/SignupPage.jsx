@@ -4,7 +4,17 @@ import '../styles/signup.css';
 function SignupPage({ signup, onChange, onSubmit, onSwitchToLogin, error, message }) {
   useEffect(() => {
     document.body.classList.add('auth-page');
-    return () => document.body.classList.remove('auth-page');
+    // Prevent browser back from leaving the SPA — navigate to login instead
+    window.history.pushState(null, '', window.location.href);
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.href);
+      onSwitchToLogin();
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      document.body.classList.remove('auth-page');
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   return (
@@ -13,10 +23,13 @@ function SignupPage({ signup, onChange, onSubmit, onSwitchToLogin, error, messag
 
         {/* Left Hero */}
         <section className="auth-hero hero-signup">
+          <div className="hero-logo-block">
+            <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="hero-logo-img" />
+          </div>
           <div className="hero-copy">
             <span className="hero-pill">VendorBridge</span>
             <h1>Build procurement speed with confidence.</h1>
-            <p>Create your VendorBridge account and access supplier workflows, approvals, and spend analytics in one polished workspace.</p>
+            <p>Create your account and access supplier workflows, approvals, and spend analytics in one workspace.</p>
             <div className="hero-features">
               <div className="hero-feature-item">
                 <span className="hero-feature-dot" />
@@ -39,6 +52,7 @@ function SignupPage({ signup, onChange, onSubmit, onSwitchToLogin, error, messag
           <div className="brand-row">
             <img src="/vendorbridge-logo.svg" alt="VendorBridge" className="auth-brand-logo" />
           </div>
+
           <h1>Create your account</h1>
           <p>Join VendorBridge to manage procurement, suppliers, and spend from one dashboard.</p>
 

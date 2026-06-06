@@ -221,8 +221,29 @@ function RFQPage({ apiBase, user, onNavigate, onLogout }) {
                   {form.line_items.map((lineItem, index) => (
                     <div key={index} className="rfq-line-item-row">
                       <input value={lineItem.item} onChange={(e) => handleLineItemChange(index, 'item', e.target.value)} placeholder="Item description" required />
-                      <input type="number" min="1" value={lineItem.quantity} onChange={(e) => handleLineItemChange(index, 'quantity', Number(e.target.value))} placeholder="Qty" />
-                      <input value={lineItem.unit} onChange={(e) => handleLineItemChange(index, 'unit', e.target.value)} placeholder="Unit" />
+                      <input
+                        type="number"
+                        min="1"
+                        value={lineItem.quantity}
+                        onChange={(e) => handleLineItemChange(index, 'quantity', Number(e.target.value))}
+                        placeholder="Qty"
+                      />
+                      <select
+                        value={lineItem.unit}
+                        onChange={(e) => handleLineItemChange(index, 'unit', e.target.value)}
+                        className="rfq-unit-select"
+                      >
+                        <option value="">Unit</option>
+                        <option value="nos">nos</option>
+                        <option value="kg">kg</option>
+                        <option value="pcs">pcs</option>
+                        <option value="ltr">ltr</option>
+                        <option value="m">m</option>
+                        <option value="box">box</option>
+                        <option value="set">set</option>
+                        <option value="ton">ton</option>
+                        <option value="hr">hr</option>
+                      </select>
                       <button type="button" className="rfq-remove-btn" onClick={() => removeLineItem(index)}>✕</button>
                     </div>
                   ))}

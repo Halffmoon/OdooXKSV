@@ -83,6 +83,7 @@ function Sidebar({ user, activePage, onNavigate, onLogout }) {
     if (item === 'Approvals') return 'approvals';
     if (item === 'PO & Invoices') return 'po-invoice';
     if (item === 'Reports') return 'reports';
+    if (item === 'Activity') return 'activity';
     return 'dashboard';
   };
 
@@ -93,6 +94,7 @@ function Sidebar({ user, activePage, onNavigate, onLogout }) {
     if (activePage === 'approvals' && item === 'Approvals') return true;
     if (activePage === 'po-invoice' && item === 'PO & Invoices') return true;
     if (activePage === 'reports' && item === 'Reports') return true;
+    if (activePage === 'activity' && item === 'Activity') return true;
     if (activePage === 'dashboard' && item === 'Dashboard') return true;
     return false;
   };

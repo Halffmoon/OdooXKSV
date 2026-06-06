@@ -1,25 +1,5 @@
 [
   {
-    "firstName": "Hetvi",
-    "lastName": "",
-    "email": "hetvi@gmail.com",
-    "phone": "94280868585",
-    "role": "Vendor",
-    "country": "India",
-    "password": "h12345",
-    "extra": ""
-  },
-  {
-    "firstName": "krish",
-    "lastName": "",
-    "email": "krish2@gmail.com",
-    "phone": "548745",
-    "role": "Manager",
-    "country": "india",
-    "password": "k12345",
-    "extra": ""
-  },
-  {
     "firstName": "Mihir",
     "lastName": "Patel",
     "email": "mihir@gmail.com",
