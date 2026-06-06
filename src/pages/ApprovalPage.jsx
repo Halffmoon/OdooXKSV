@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
+import Sidebar from '../components/Sidebar.jsx';
 import '../styles/approval.css';
 
-function ApprovalPage({ apiBase, onBack }) {
+function ApprovalPage({ apiBase, user, onNavigate }) {
   const [approvals, setApprovals] = useState([]);
   const [quotations, setQuotations] = useState([]);
   const [selectedQuotationId, setSelectedQuotationId] = useState('');
@@ -104,16 +105,20 @@ function ApprovalPage({ apiBase, onBack }) {
   };
 
   return (
-    <div className="approval-page">
-      <header className="approval-header">
-        <div>
-          <h2>Approval Workflow</h2>
-          <p>Review quotations, approve supplier bids, and track each approval stage in a modern procurement experience.</p>
-        </div>
-        <div className="header-actions">
-          <button className="secondary-btn" onClick={onBack}>Back to dashboard</button>
-        </div>
-      </header>
+    <div className="approval-container">
+      <Sidebar user={user} activePage="approvals" onNavigate={onNavigate} />
+
+      <div className="approval-main">
+        <div className="approval-page">
+          <header className="approval-header">
+            <div>
+              <h2>Approval Workflow</h2>
+              <p>Review quotations, approve supplier bids, and track each approval stage in a modern procurement experience.</p>
+            </div>
+            <div className="header-actions">
+              <button className="btn-secondary" onClick={() => onNavigate('dashboard')}>Back to dashboard</button>
+            </div>
+          </header>
 
       <section className="approval-stats-grid">
         <article className="approval-stat-card">
@@ -205,13 +210,13 @@ function ApprovalPage({ apiBase, onBack }) {
               placeholder="Add comments, conditions, or next steps..."
             />
             <div className="approval-actions-row">
-              <button type="button" disabled={loading} className="primary-btn" onClick={() => createApproval('Approved')}>
+              <button type="button" disabled={loading} className="btn-primary" onClick={() => createApproval('Approved')}>
                 {loading ? 'Saving...' : 'Approve'}
               </button>
-              <button type="button" disabled={loading} className="secondary-btn" onClick={() => createApproval('Rejected')}>
+              <button type="button" disabled={loading} className="btn-secondary" onClick={() => createApproval('Rejected')}>
                 Reject
               </button>
-              <button type="button" disabled={loading} className="ghost-btn" onClick={() => { setRemarks(''); setError(''); setMessage(''); }}>
+              <button type="button" disabled={loading} className="btn-ghost" onClick={() => { setRemarks(''); setError(''); setMessage(''); }}>
                 Clear
               </button>
             </div>
@@ -295,6 +300,8 @@ function ApprovalPage({ apiBase, onBack }) {
           </table>
         </div>
       </section>
+        </div>
+      </div>
     </div>
   );
 }

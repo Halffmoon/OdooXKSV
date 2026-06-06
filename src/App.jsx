@@ -253,7 +253,8 @@ function App() {
       {page === 'approvals' && user && (
         <ApprovalPage
           apiBase={API_BASE}
-          onBack={() => switchPage('dashboard')}
+          user={user}
+          onNavigate={switchPage}
         />
       )}
 

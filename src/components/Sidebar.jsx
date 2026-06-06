@@ -66,12 +66,13 @@ const NAV_ICONS = {
 function Sidebar({ user, activePage, onNavigate }) {
   const navItems = user?.role === 'Admin'
     ? ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'Purchase orders', 'Invoices', 'Reports', 'Activity']
-    : ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Purchase orders', 'Invoices', 'Reports', 'Activity'];
+    : ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'Purchase orders', 'Invoices', 'Reports', 'Activity'];
 
   const getRoute = (item) => {
     if (item === 'Vendors') return 'vendors';
     if (item === "RFQ's") return 'rfqs';
     if (item === 'Quotations') return 'quotations';
+    if (item === 'Approvals') return 'approvals';
     return 'dashboard';
   };
 
@@ -79,6 +80,7 @@ function Sidebar({ user, activePage, onNavigate }) {
     if (activePage === 'vendors' && item === 'Vendors') return true;
     if (activePage === 'rfqs' && item === "RFQ's") return true;
     if (activePage === 'quotations' && item === 'Quotations') return true;
+    if (activePage === 'approvals' && item === 'Approvals') return true;
     if (activePage === 'dashboard' && item === 'Dashboard') return true;
     return false;
   };
