@@ -22,7 +22,10 @@
   overflow-y: auto;
   overflow-x: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  position: relative;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  z-index: 10;
 }
 
 .app-sidebar::before {

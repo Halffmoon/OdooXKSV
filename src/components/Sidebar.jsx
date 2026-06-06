@@ -71,12 +71,14 @@ function Sidebar({ user, activePage, onNavigate }) {
   const getRoute = (item) => {
     if (item === 'Vendors') return 'vendors';
     if (item === "RFQ's") return 'rfqs';
+    if (item === 'Quotations') return 'quotations';
     return 'dashboard';
   };
 
   const isActive = (item) => {
     if (activePage === 'vendors' && item === 'Vendors') return true;
     if (activePage === 'rfqs' && item === "RFQ's") return true;
+    if (activePage === 'quotations' && item === 'Quotations') return true;
     if (activePage === 'dashboard' && item === 'Dashboard') return true;
     return false;
   };
