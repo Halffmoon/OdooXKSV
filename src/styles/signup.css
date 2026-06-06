@@ -35,7 +35,14 @@
 .auth-card {
   flex: 1 1 50%;
   min-height: 0;
+}
+
+.auth-hero {
   overflow: hidden;
+}
+
+.auth-card {
+  overflow-y: auto;
 }
 
 .auth-hero.hero-signup {
@@ -85,8 +92,7 @@
 }
 
 .auth-card {
-  /* keep extra right padding so internal scrollbar doesn't overlap inputs */
-  padding: 40px 48px 44px 40px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -126,12 +132,6 @@
 }
 
 .auth-card p {
-  margin: 0 0 22px;
-  color: #475569;
-  line-height: 1.6;
-}
-
-.auth-card p {
   margin: 0 0 28px;
   color: #475569;
   line-height: 1.7;
@@ -153,14 +153,9 @@
 }
 
 .split-row {
-  display: flex;
-  gap: 20px;
-  align-items: stretch;
-}
-
-.split-row > label {
-  flex: 1 1 0;
-  min-width: 0; /* allow inputs to shrink properly */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .auth-form input,
@@ -192,45 +187,6 @@
   box-shadow: 0 10px 25px rgba(251,146,60,0.16);
   transform: translateY(-1px);
 }
-
-.form-error,
-.form-message {
-  border-radius: 18px;
-  padding: 14px 16px;
-  margin-top: 10px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.form-error {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
-}
-
-.form-message {
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
-}
-
-.auth-extra-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 8px;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Lock body scroll while signup page is mounted */
 body.auth-page {
   height: 100vh;
@@ -248,11 +204,6 @@ body.auth-page .auth-screen {
 body.auth-page .auth-panel {
   height: 100%;
   max-height: 100%;
-}
-
-body.auth-page .auth-card {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* make scrollbar visible but inset from rounded corner */
@@ -288,6 +239,6 @@ body.auth-page .auth-card {
     justify-content: flex-start;
   }
   .split-row {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 }
