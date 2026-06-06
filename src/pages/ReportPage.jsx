@@ -1,105 +1,149 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Sidebar from '../components/Sidebar.jsx';
+import { 
+  BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell 
+} from 'recharts';
+import { Calendar, Download, PieChart, TrendingUp, IndianRupee, Users, Package, AlertCircle } from 'lucide-react';
 import '../styles/report.css';
 
-function ReportPage({ user, onNavigate }) {
-  const [animate, setAnimate] = useState(false);
+const monthlyData = [
+  { name: 'Dec', spend: 4.1 },
+  { name: 'Jan', spend: 5.2 },
+  { name: 'Feb', spend: 4.8 },
+  { name: 'Mar', spend: 7.5 },
+  { name: 'Apr', spend: 8.9 },
+  { name: 'May', spend: 12.4 },
+];
 
-  useEffect(() => {
-    // Trigger animation shortly after mount
-    const timer = setTimeout(() => setAnimate(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+const categoryData = [
+  { name: 'IT Hardware', value: 4.8, fill: '#1428a0' },
+  { name: 'Furniture', value: 3.2, fill: '#059669' },
+  { name: 'Stationery', value: 2.1, fill: '#d97706' },
+  { name: 'Logistics', value: 2.3, fill: '#dc2626' },
+];
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip" style={{ background: '#fff', padding: '12px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+        <p className="label" style={{ margin: 0, fontWeight: 600, color: '#5a5a5a', marginBottom: '4px' }}>{label}</p>
+        <p className="intro" style={{ margin: 0, fontWeight: 700, color: payload[0].payload.fill || '#1428a0' }}>
+          ₹{payload[0].value}L
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+function ReportPage({ user, onNavigate, onLogout }) {
   return (
     <div className="report-container">
-      <Sidebar user={user} activePage="reports" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="reports" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="report-main">
         <div className="report-page">
           <header className="report-header">
             <div>
-              <h2>Reports & analytics</h2>
+              <h2 style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <PieChart size={32} color="#1428a0" />
+                Reports & Analytics
+              </h2>
               <p>Procurement Insights - May 2025</p>
             </div>
             <div className="report-header-actions">
-              <button className="btn-secondary" style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>May 2025</button>
-              <button className="btn-secondary" style={{ padding: '8px 16px', borderRadius: '6px', border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>Export</button>
+              <button className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '8px', border: '1px solid #e0e0e0', background: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem', color: '#1c1c1c' }}>
+                <Calendar size={18} />
+                May 2025
+              </button>
+              <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '8px', border: 'none', background: '#1428a0', color: '#fff', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}>
+                <Download size={18} />
+                Export
+              </button>
             </div>
           </header>
 
           <section className="report-kpi-grid">
             <div className="report-kpi-card">
+              <IndianRupee size={28} color="#1428a0" style={{ marginBottom: '12px', opacity: 0.8 }} />
               <div className="report-kpi-value blue">12.4 L</div>
               <div className="report-kpi-label">Total Spend</div>
             </div>
             <div className="report-kpi-card">
+              <Users size={28} color="#059669" style={{ marginBottom: '12px', opacity: 0.8 }} />
               <div className="report-kpi-value green">28</div>
               <div className="report-kpi-label">Active Vendors</div>
             </div>
             <div className="report-kpi-card">
+              <Package size={28} color="#d97706" style={{ marginBottom: '12px', opacity: 0.8 }} />
               <div className="report-kpi-value orange">94%</div>
               <div className="report-kpi-label">PO Fulfillment</div>
             </div>
             <div className="report-kpi-card">
+              <AlertCircle size={28} color="#dc2626" style={{ marginBottom: '12px', opacity: 0.8 }} />
               <div className="report-kpi-value red">3</div>
               <div className="report-kpi-label">Overdue Invoices</div>
             </div>
           </section>
 
           <section className="report-content-grid">
-            <div className="report-card">
+            <div className="report-card" style={{ display: 'flex', flexDirection: 'column' }}>
               <div className="report-card-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                <PieChart size={20} />
                 Spend by Category
               </div>
-              <div className="spend-category-list">
-                <div className="spend-category-item">
-                  <div className="spend-category-header">
-                    <span className="category-name">IT Hardware</span>
-                    <span className="category-value">₹4.8L</span>
-                  </div>
-                  <div className="spend-category-bar-bg">
-                    <div className="spend-category-bar-fill blue" style={{ width: animate ? '45%' : '0%' }}></div>
-                  </div>
-                </div>
-                
-                <div className="spend-category-item">
-                  <div className="spend-category-header">
-                    <span className="category-name">Furniture</span>
-                    <span className="category-value">₹3.2L</span>
-                  </div>
-                  <div className="spend-category-bar-bg">
-                    <div className="spend-category-bar-fill green" style={{ width: animate ? '30%' : '0%' }}></div>
-                  </div>
-                </div>
-
-                <div className="spend-category-item">
-                  <div className="spend-category-header">
-                    <span className="category-name">Stationery</span>
-                    <span className="category-value">₹2.1L</span>
-                  </div>
-                  <div className="spend-category-bar-bg">
-                    <div className="spend-category-bar-fill orange" style={{ width: animate ? '20%' : '0%' }}></div>
-                  </div>
-                </div>
-
-                <div className="spend-category-item">
-                  <div className="spend-category-header">
-                    <span className="category-name">Logistics</span>
-                    <span className="category-value">₹2.3L</span>
-                  </div>
-                  <div className="spend-category-bar-bg">
-                    <div className="spend-category-bar-fill red" style={{ width: animate ? '22%' : '0%' }}></div>
-                  </div>
-                </div>
+              <div style={{ flex: 1, width: '100%', minHeight: '300px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    layout="vertical"
+                    data={categoryData}
+                    margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f0f0f0" />
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fill: '#5a5a5a', fontWeight: 600 }} width={90} />
+                    <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0,0,0,0.04)' }} />
+                    <Bar dataKey="value" radius={[0, 6, 6, 0]} barSize={24} animationDuration={1500}>
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
             <div className="report-right-col">
               <div className="report-card" style={{ marginBottom: '24px' }}>
                 <div className="report-card-title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <TrendingUp size={20} />
+                  Monthly Trend
+                </div>
+                <div style={{ width: '100%', height: '220px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={monthlyData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="colorSpend" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1428a0" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#1428a0" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#5a5a5a', fontSize: 12, fontWeight: 600 }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#5a5a5a', fontSize: 12 }} dx={-10} />
+                      <RechartsTooltip content={<CustomTooltip />} />
+                      <Area type="monotone" dataKey="spend" stroke="#1428a0" strokeWidth={3} fillOpacity={1} fill="url(#colorSpend)" animationDuration={2000} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="report-card">
+                <div className="report-card-title">
+                  <Users size={20} />
                   Top Vendors by Spend
                 </div>
                 <div className="report-table-wrapper" style={{ marginBottom: '0' }}>
@@ -129,40 +173,6 @@ function ReportPage({ user, onNavigate }) {
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
-
-              <div className="report-card">
-                <div className="report-card-title">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                  Monthly Trend
-                </div>
-                <div className="monthly-trend-container">
-                  <div className="monthly-trend-gridlines">
-                    <div className="trend-gridline"></div>
-                    <div className="trend-gridline"></div>
-                    <div className="trend-gridline"></div>
-                    <div className="trend-gridline"></div>
-                  </div>
-                  <div className="monthly-trend-chart">
-                    {[
-                      { month: 'Dec', value: '4.1L', height: '30%' },
-                      { month: 'Jan', value: '5.2L', height: '40%' },
-                      { month: 'Feb', value: '4.8L', height: '35%' },
-                      { month: 'Mar', value: '7.5L', height: '55%' },
-                      { month: 'Apr', value: '8.9L', height: '65%' },
-                      { month: 'May', value: '12.4L', height: '90%', active: true },
-                    ].map((item, index) => (
-                      <div className="trend-bar-wrapper" key={index}>
-                        <div className="trend-value">{item.value}</div>
-                        <div 
-                          className={`trend-bar ${item.active ? 'active' : ''}`} 
-                          style={{ height: animate ? item.height : '0%' }}
-                        ></div>
-                        <span className="trend-label">{item.month}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>

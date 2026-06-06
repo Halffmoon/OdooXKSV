@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import '../styles/quotation-page.css';
 
-function QuotationPage({ apiBase, user, onNavigate }) {
+function QuotationPage({ apiBase, user, onNavigate, onLogout }) {
   const [quotations, setQuotations] = useState([]);
   const [rfqs, setRfqs] = useState([]);
   const [vendors, setVendors] = useState([]);
@@ -130,7 +130,7 @@ function QuotationPage({ apiBase, user, onNavigate }) {
 
   return (
     <div className="quot-container">
-      <Sidebar user={user} activePage="quotations" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="quotations" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="quot-main">
         {/* Header */}
@@ -141,20 +141,22 @@ function QuotationPage({ apiBase, user, onNavigate }) {
           </div>
           <div className="quot-header-right">
             <span className="quot-role-badge">{user?.role || 'Officer'}</span>
-            <div className="quot-view-toggle">
-              <button
-                className={`toggle-btn ${view === 'submit' ? 'active' : ''}`}
-                onClick={() => setView('submit')}
-              >
-                Submit Quotation
-              </button>
-              <button
-                className={`toggle-btn ${view === 'compare' ? 'active' : ''}`}
-                onClick={() => setView('compare')}
-              >
-                Comparison
-              </button>
-            </div>
+            {user?.role !== 'Vendor' && (
+              <div className="quot-view-toggle">
+                <button
+                  className={`toggle-btn ${view === 'submit' ? 'active' : ''}`}
+                  onClick={() => setView('submit')}
+                >
+                  Submit Quotation
+                </button>
+                <button
+                  className={`toggle-btn ${view === 'compare' ? 'active' : ''}`}
+                  onClick={() => setView('compare')}
+                >
+                  Comparison
+                </button>
+              </div>
+            )}
           </div>
         </header>
 

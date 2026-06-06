@@ -26,6 +26,12 @@ const recentOrders = [
 const API_BASE = 'http://localhost:4000/api';
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const getDefaultPage = (role) => {
+  if (role === 'Vendor') return 'quotations';
+  if (role === 'Officer') return 'approvals';
+  return 'dashboard';
+};
+
 function App() {
   const [page, setPage] = useState('login');
   const [form, setForm] = useState({ email: '', password: '' });
@@ -47,7 +53,7 @@ function App() {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          setPage('dashboard');
+          setPage(getDefaultPage(data.user.role));
         }
       })
       .catch(() => {
@@ -87,7 +93,7 @@ function App() {
 
     setUser(data.user);
     setForm({ email: '', password: '' });
-    setPage('dashboard');
+    setPage(getDefaultPage(data.user.role));
   };
 
   const handleForgotVerify = async (e) => {
@@ -241,6 +247,7 @@ function App() {
           apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
 
@@ -249,6 +256,7 @@ function App() {
           apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
 
@@ -257,6 +265,7 @@ function App() {
           apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
 
@@ -265,6 +274,7 @@ function App() {
           apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
 
@@ -272,6 +282,7 @@ function App() {
         <POInvoicePage
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
 
@@ -279,6 +290,7 @@ function App() {
         <ReportPage
           user={user}
           onNavigate={switchPage}
+          onLogout={handleLogout}
         />
       )}
     </div>

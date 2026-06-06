@@ -63,10 +63,18 @@ const NAV_ICONS = {
   ),
 };
 
-function Sidebar({ user, activePage, onNavigate }) {
-  const navItems = user?.role === 'Admin'
-    ? ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'PO & Invoices', 'Reports', 'Activity']
-    : ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'PO & Invoices', 'Reports', 'Activity'];
+function Sidebar({ user, activePage, onNavigate, onLogout }) {
+  let navItems = [];
+  if (user?.role === 'Manager') {
+    navItems = ['Dashboard', 'Vendors', "RFQ's"];
+  } else if (user?.role === 'Officer') {
+    navItems = ['Approvals', 'PO & Invoices', 'Reports', 'Activity'];
+  } else if (user?.role === 'Vendor') {
+    navItems = ['Quotations'];
+  } else {
+    // Admin or fallback
+    navItems = ['Dashboard', 'Vendors', "RFQ's", 'Quotations', 'Approvals', 'PO & Invoices', 'Reports', 'Activity'];
+  }
 
   const getRoute = (item) => {
     if (item === 'Vendors') return 'vendors';
@@ -130,6 +138,16 @@ function Sidebar({ user, activePage, onNavigate }) {
       </nav>
 
       <div className="sidebar-footer">
+        {onLogout && (
+          <button className="sidebar-logout-btn" onClick={onLogout}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Logout
+          </button>
+        )}
         <div className="sidebar-footer-text">© 2025 VendorBridge</div>
       </div>
     </div>

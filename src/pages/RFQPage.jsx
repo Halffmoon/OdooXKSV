@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import '../styles/rfq-page.css';
 
-function RFQPage({ apiBase, user, onNavigate }) {
+function RFQPage({ apiBase, user, onNavigate, onLogout }) {
   const [rfqs, setRfqs] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [error, setError] = useState('');
@@ -145,8 +145,8 @@ function RFQPage({ apiBase, user, onNavigate }) {
   ];
 
   return (
-    <div className="rfq-dashboard-container">
-      <Sidebar user={user} activePage="rfqs" onNavigate={onNavigate} />
+    <div className="rfq-container">
+      <Sidebar user={user} activePage="rfq" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="rfq-dashboard-main">
         {/* Header */}

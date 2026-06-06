@@ -69,7 +69,7 @@ const STATUS_CLASS = {
 function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
   return (
     <div className="dashboard-container">
-      <Sidebar user={user} activePage="dashboard" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="dashboard" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="dashboard-main">
         {/* Header */}
@@ -80,14 +80,6 @@ function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
           </div>
           <div className="dashboard-header-right">
             <span className="header-role-badge">{user?.role || 'Officer'}</span>
-            <button className="logout-btn" onClick={onLogout}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-              Logout
-            </button>
           </div>
         </header>
 

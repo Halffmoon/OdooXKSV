@@ -89,7 +89,9 @@ function SignupPage({ signup, onChange, onSubmit, onSwitchToLogin, error, messag
               <label>
                 Role
                 <select value={signup.role} onChange={(e) => onChange({ ...signup, role: e.target.value })}>
+                  <option>Manager</option>
                   <option>Officer</option>
+                  <option>Vendor</option>
                   <option>Admin</option>
                 </select>
               </label>

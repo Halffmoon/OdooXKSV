@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import '../styles/vendor.css';
 
-function VendorPage({ apiBase, user, onNavigate }) {
+function VendorPage({ apiBase, user, onNavigate, onLogout }) {
   const [form, setForm] = useState({
     company_name: '',
     gst_number: '',
@@ -155,7 +155,7 @@ function VendorPage({ apiBase, user, onNavigate }) {
 
   return (
     <div className="vendor-container">
-      <Sidebar user={user} activePage="vendors" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="vendors" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="vendor-main">
         <div className="vendor-header">

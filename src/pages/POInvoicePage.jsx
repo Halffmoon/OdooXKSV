@@ -2,10 +2,10 @@ import React from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import '../styles/po-invoice.css';
 
-function POInvoicePage({ user, onNavigate }) {
+function POInvoicePage({ user, onNavigate, onLogout }) {
   return (
     <div className="po-container">
-      <Sidebar user={user} activePage="po-invoice" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="po-invoices" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="po-main">
         <div className="po-page">

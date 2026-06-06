@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import '../styles/approval.css';
 
-function ApprovalPage({ apiBase, user, onNavigate }) {
+function ApprovalPage({ apiBase, user, onNavigate, onLogout }) {
   const [approvals, setApprovals] = useState([]);
   const [quotations, setQuotations] = useState([]);
   const [selectedQuotationId, setSelectedQuotationId] = useState('');
@@ -106,7 +106,7 @@ function ApprovalPage({ apiBase, user, onNavigate }) {
 
   return (
     <div className="approval-container">
-      <Sidebar user={user} activePage="approvals" onNavigate={onNavigate} />
+      <Sidebar user={user} activePage="approvals" onNavigate={onNavigate} onLogout={onLogout} />
 
       <div className="approval-main">
         <div className="approval-page">
