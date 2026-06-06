@@ -68,30 +68,11 @@ const STATUS_CLASS = {
 
 function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
   return (
-    <div className="dashboard-screen">
-      <aside className="sidebar">
-        <div className="sidebar-brand">
-          <span>VendorBridge</span>
-        </div>
-        <nav className="sidebar-nav">
-          {navItems.map((item) => (
-            <button
-              key={item}
-              className="nav-item"
-              onClick={() => onNavigate && onNavigate(
-                item === 'Vendors' ? 'vendors'
-                  : item === "RFQ's" ? 'rfqs'
-                    : 'dashboard'
-              )}
-            >
-              <span className="nav-item-icon" aria-hidden="true"></span>
-              <span>{item}</span>
-            </button>
-          ))}
-        </nav>
-      </aside>
+    <div className="dashboard-container">
+      <Sidebar user={user} activePage="dashboard" onNavigate={onNavigate} />
 
-      <main className="dashboard-main">
+      <div className="dashboard-main">
+        {/* Header */}
         <header className="dashboard-header">
           <div className="dashboard-header-left">
             <h1>Dashboard</h1>
@@ -268,8 +249,8 @@ function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
           </section>
 
         </div>
+      </div>
     </div>
-    </div >
   );
 }
 
