@@ -236,14 +236,16 @@ function App() {
       {page === 'rfqs' && user && (
         <RFQPage
           apiBase={API_BASE}
-          onBack={() => switchPage('dashboard')}
+          user={user}
+          onNavigate={switchPage}
         />
       )}
 
       {page === 'quotations' && user && (
         <QuotationPage
           apiBase={API_BASE}
-          onBack={() => switchPage('dashboard')}
+          user={user}
+          onNavigate={switchPage}
         />
       )}
 
