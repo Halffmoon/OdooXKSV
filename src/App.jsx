@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import VendorPage from './pages/VendorPage.jsx';
 import RFQPage from './pages/RFQPage.jsx';
 import QuotationPage from './pages/QuotationPage.jsx';
+import ApprovalPage from './pages/ApprovalPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -246,6 +247,13 @@ function App() {
           apiBase={API_BASE}
           user={user}
           onNavigate={switchPage}
+        />
+      )}
+
+      {page === 'approvals' && user && (
+        <ApprovalPage
+          apiBase={API_BASE}
+          onBack={() => switchPage('dashboard')}
         />
       )}
 
