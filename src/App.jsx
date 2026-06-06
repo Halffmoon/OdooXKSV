@@ -6,6 +6,8 @@ import VendorPage from './pages/VendorPage.jsx';
 import RFQPage from './pages/RFQPage.jsx';
 import QuotationPage from './pages/QuotationPage.jsx';
 import ApprovalPage from './pages/ApprovalPage.jsx';
+import POInvoicePage from './pages/POInvoicePage.jsx';
+import ReportPage from './pages/ReportPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -261,6 +263,20 @@ function App() {
       {page === 'vendors' && user && (
         <VendorPage
           apiBase={API_BASE}
+          user={user}
+          onNavigate={switchPage}
+        />
+      )}
+
+      {page === 'po-invoice' && user && (
+        <POInvoicePage
+          user={user}
+          onNavigate={switchPage}
+        />
+      )}
+
+      {page === 'reports' && user && (
+        <ReportPage
           user={user}
           onNavigate={switchPage}
         />
