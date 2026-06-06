@@ -1,0 +1,222 @@
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import { promises as fs } from 'fs';
+import { join } from 'path';
+import { randomUUID } from 'crypto';
+
+const app = express();
+const port = 4000;
+const dataDir = join(process.cwd(), 'data');
+const filePaths = {
+  users: join(dataDir, 'users.json'),
+  loginHistory: join(dataDir, 'login-history.json'),
+  sessions: join(dataDir, 'sessions.json'),
+};
+
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+app.use(express.json());
+app.use(cookieParser());
+
+const ensureDataFiles = async () => {
+  await fs.mkdir(dataDir, { recursive: true });
+  for (const path of Object.values(filePaths)) {
+    try {
+      await fs.access(path);
+    } catch (err) {
+      const initialValue = path === filePaths.users ? [] : [];
+      await fs.writeFile(path, JSON.stringify(initialValue, null, 2), 'utf8');
+    }
+  }
+};
+
+const readJson = async (path, defaultValue) => {
+  try {
+    const raw = await fs.readFile(path, 'utf8');
+    return JSON.parse(raw || 'null') ?? defaultValue;
+  } catch (err) {
+    return defaultValue;
+  }
+};
+
+const writeJson = async (path, data) => {
+  await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf8');
+};
+
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const recordLoginAttempt = async ({ email, status, role, message }) => {
+  const loginHistory = await readJson(filePaths.loginHistory, []);
+  const newEntry = {
+    email,
+    status,
+    role,
+    message,
+    timestamp: new Date().toISOString(),
+  };
+  await writeJson(filePaths.loginHistory, [newEntry, ...loginHistory]);
+};
+
+const createSession = async (userEmail) => {
+  const sessions = await readJson(filePaths.sessions, []);
+  const sessionId = randomUUID();
+  const user = await findUserByEmail(userEmail);
+  sessions.push({ sessionId, email: userEmail, role: user.role, createdAt: new Date().toISOString() });
+  await writeJson(filePaths.sessions, sessions);
+  return sessionId;
+};
+
+const findUserByEmail = async (email) => {
+  const users = await readJson(filePaths.users, []);
+  return users.find((user) => user.email.toLowerCase() === email.toLowerCase());
+};
+
+app.get('/api/session', async (req, res) => {
+  const { sessionId } = req.cookies;
+  if (!sessionId) {
+    return res.json({ user: null });
+  }
+  const sessions = await readJson(filePaths.sessions, []);
+  const session = sessions.find((record) => record.sessionId === sessionId);
+  if (!session) {
+    return res.json({ user: null });
+  }
+  const user = await findUserByEmail(session.email);
+  if (!user) {
+    return res.json({ user: null });
+  }
+  const { password, ...userData } = user;
+  res.json({ user: userData });
+});
+
+app.post('/api/register', async (req, res) => {
+  const { firstName, lastName, email, phone, role, country, password, confirmPassword, extra } = req.body;
+  if (!firstName || !email || !password || !confirmPassword) {
+    return res.status(400).json({ error: 'Please fill in all required fields.' });
+  }
+  if (!validateEmail(email)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).json({ error: 'Passwords do not match.' });
+  }
+  const existingUser = await findUserByEmail(email);
+  if (existingUser) {
+    return res.status(400).json({ error: 'That email is already registered.' });
+  }
+
+  const users = await readJson(filePaths.users, []);
+  const newUser = {
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    email: email.trim().toLowerCase(),
+    phone: phone?.trim() ?? '',
+    role: role || 'Officer',
+    country: country?.trim() ?? '',
+    password,
+    extra: extra?.trim() ?? '',
+  };
+  await writeJson(filePaths.users, [newUser, ...users]);
+  res.json({ message: 'Registration successful. You can now login.' });
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!validateEmail(email) || !password) {
+    const message = 'Please enter a valid email and password.';
+    await recordLoginAttempt({ email, status: 'failed', role: 'unknown', message });
+    return res.status(400).json({ error: message });
+  }
+  const user = await findUserByEmail(email);
+  if (!user || user.password !== password) {
+    const message = 'Invalid email or password.';
+    await recordLoginAttempt({ email, status: 'failed', role: user?.role || 'unknown', message });
+    return res.status(401).json({ error: message });
+  }
+  const sessionId = await createSession(user.email);
+  res.cookie('sessionId', sessionId, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: false,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  });
+  const { password: _, ...userData } = user;
+  await recordLoginAttempt({ email: user.email, status: 'success', role: user.role, message: 'Login successful' });
+  res.json({ user: userData });
+});
+
+app.post('/api/logout', async (req, res) => {
+  const { sessionId } = req.cookies;
+  if (sessionId) {
+    const sessions = await readJson(filePaths.sessions, []);
+    const filtered = sessions.filter((session) => session.sessionId !== sessionId);
+    await writeJson(filePaths.sessions, filtered);
+    res.clearCookie('sessionId');
+  }
+  res.json({ message: 'Logged out' });
+});
+
+app.post('/api/forgot', async (req, res) => {
+  const { email, phone } = req.body;
+  if (!validateEmail(email) || !phone || !phone.trim()) {
+    return res.status(400).json({ error: 'Please enter a valid email and phone number.' });
+  }
+
+  const user = await findUserByEmail(email);
+  if (!user || user.phone !== phone.trim()) {
+    return res.status(400).json({ error: 'The provided email and phone do not match our records.' });
+  }
+
+  res.json({ message: 'Account verified. Enter a new password to reset your account.' });
+});
+
+app.post('/api/reset-password', async (req, res) => {
+  const { email, phone, password, confirmPassword } = req.body;
+  if (!validateEmail(email) || !phone || !phone.trim() || !password || !confirmPassword) {
+    return res.status(400).json({ error: 'Please provide email, phone, and matching password fields.' });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).json({ error: 'Passwords do not match.' });
+  }
+
+  const users = await readJson(filePaths.users, []);
+  const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+  if (!user || user.phone !== phone.trim()) {
+    return res.status(400).json({ error: 'The provided email and phone do not match our records.' });
+  }
+
+  const updatedUsers = users.map((u) => {
+    if (u.email.toLowerCase() === email.toLowerCase()) {
+      return { ...u, password };
+    }
+    return u;
+  });
+  await writeJson(filePaths.users, updatedUsers);
+  res.json({ message: 'Password reset successfully. You can now login.' });
+});
+
+await ensureDataFiles();
+
+const server = app.listen(port, () => {
+  console.log(`VendorBridge backend running on http://localhost:${port}`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${port} is already in use. Stop the existing server or change the port, then try again.`);
+    process.exit(1);
+  }
+  throw err;
+});

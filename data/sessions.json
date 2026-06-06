@@ -1,0 +1,50 @@
+[
+  {
+    "sessionId": "8ee2519a-7ce6-4d50-9987-718ddb4d275b",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T03:45:34.218Z"
+  },
+  {
+    "sessionId": "ced277b7-8f16-41ef-8935-e8300226310b",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T03:56:11.597Z"
+  },
+  {
+    "sessionId": "6d505bc3-280b-4703-a0a3-f8e3b95292cc",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:06:08.030Z"
+  },
+  {
+    "sessionId": "c680dc12-e567-4b7e-85ff-299bc3f9bd79",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:20:47.985Z"
+  },
+  {
+    "sessionId": "a34c03ce-1a99-4d78-a5ba-b90c6c4627d5",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:28:26.923Z"
+  },
+  {
+    "sessionId": "ab81603c-bb29-45ba-8eb5-0f96c573893f",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:34:03.945Z"
+  },
+  {
+    "sessionId": "1ab915e9-6868-4dcd-909e-57223f3575cc",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:39:34.616Z"
+  },
+  {
+    "sessionId": "eafc1878-4eb7-4530-ac3f-9d6a400a993f",
+    "email": "henypatel26012005@gmail.com",
+    "role": "Officer",
+    "createdAt": "2026-06-06T04:46:03.204Z"
+  }
+]
