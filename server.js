@@ -2,14 +2,17 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import multer from 'multer';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/prisma/index.js';
 
 const app = express();
 const port = 4000;
 const dataDir = join(process.cwd(), 'data');
+const uploadsDir = join(process.cwd(), 'uploads');
+const upload = multer({ dest: uploadsDir });
 const filePaths = {
   users: join(dataDir, 'users.json'),
   loginHistory: join(dataDir, 'login-history.json'),
@@ -37,9 +40,11 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(uploadsDir));
 
 const ensureDataFiles = async () => {
   await fs.mkdir(dataDir, { recursive: true });
+  await fs.mkdir(uploadsDir, { recursive: true });
   for (const path of Object.values(filePaths)) {
     try {
       await fs.access(path);
@@ -288,14 +293,33 @@ app.get('/api/rfqs', async (req, res) => {
   }
 });
 
-app.post('/api/rfqs', async (req, res) => {
+app.post('/api/rfqs', upload.array('attachments', 8), async (req, res) => {
   if (!prismaConnected) {
     return res.status(503).json({ error: 'Database unavailable. RFQ APIs are not available right now.' });
   }
 
-  const { title, category, deadline, description, line_items, vendor_ids } = req.body;
+  const safeParseJson = (value, fallback) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        return fallback;
+      }
+    }
+    return value ?? fallback;
+  };
+
+  const { title, category, deadline, description } = req.body;
+  const line_items = safeParseJson(req.body.line_items, []);
+  const vendor_ids = safeParseJson(req.body.vendor_ids, []);
+
   if (!title || !category || !deadline || !Array.isArray(line_items) || line_items.length === 0) {
     return res.status(400).json({ error: 'Missing required RFQ fields.' });
+  }
+
+  const validLineItems = line_items.filter((item) => item?.item && item?.unit && Number(item.quantity) > 0);
+  if (validLineItems.length === 0) {
+    return res.status(400).json({ error: 'Please provide at least one valid line item.' });
   }
 
   try {
@@ -306,7 +330,7 @@ app.post('/api/rfqs', async (req, res) => {
         deadline: new Date(deadline),
         description: description?.trim() ?? '',
         line_items: {
-          create: line_items.map((item) => ({
+          create: validLineItems.map((item) => ({
             item: item.item.trim(),
             quantity: Number(item.quantity) || 1,
             unit: item.unit.trim() || 'NOS',
@@ -315,6 +339,14 @@ app.post('/api/rfqs', async (req, res) => {
         assigned_vendors: {
           create: (Array.isArray(vendor_ids) ? vendor_ids : []).map((vendorId) => ({
             vendor: { connect: { id: Number(vendorId) } },
+          })),
+        },
+        attachments: {
+          create: (req.files || []).map((file) => ({
+            file_name: file.originalname,
+            file_url: `/uploads/${file.filename}`,
+            file_type: file.mimetype,
+            file_size: file.size,
           })),
         },
       },
@@ -328,6 +360,57 @@ app.post('/api/rfqs', async (req, res) => {
   } catch (err) {
     console.error('Error creating RFQ', err);
     res.status(500).json({ error: 'Unable to create RFQ' });
+  }
+});
+
+app.get('/api/quotations', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Quotation APIs are not available right now.' });
+  }
+
+  try {
+    const quotations = await prisma.quotation.findMany({
+      orderBy: { created_at: 'desc' },
+      include: {
+        rfq: true,
+        vendor: true,
+      },
+    });
+    res.json({ quotations });
+  } catch (err) {
+    console.error('Error fetching quotations', err);
+    res.status(500).json({ error: 'Unable to fetch quotations' });
+  }
+});
+
+app.post('/api/quotations', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Quotation APIs are not available right now.' });
+  }
+
+  const { rfq_id, vendor_id, total_amount, delivery_days, status } = req.body;
+  if (!rfq_id || !vendor_id || !total_amount || !delivery_days || !status) {
+    return res.status(400).json({ error: 'Missing required quotation fields.' });
+  }
+
+  try {
+    const quotation = await prisma.quotation.create({
+      data: {
+        rfq: { connect: { id: Number(rfq_id) } },
+        vendor: { connect: { id: Number(vendor_id) } },
+        total_amount: Number(total_amount),
+        delivery_days: Number(delivery_days),
+        status: status.trim(),
+      },
+      include: {
+        rfq: true,
+        vendor: true,
+      },
+    });
+    res.json({ quotation });
+  } catch (err) {
+    console.error('Error creating quotation', err);
+    res.status(500).json({ error: 'Unable to create quotation' });
   }
 });
 
