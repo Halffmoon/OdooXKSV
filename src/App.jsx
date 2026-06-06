@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import VendorPage from './pages/VendorPage.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 
 const dashboardStats = [
@@ -226,6 +227,14 @@ function App() {
           stats={dashboardStats}
           orders={recentOrders}
           onLogout={handleLogout}
+          onNavigate={switchPage}
+        />
+      )}
+
+      {page === 'vendors' && user && (
+        <VendorPage
+          apiBase={API_BASE}
+          onBack={() => switchPage('dashboard')}
         />
       )}
     </div>

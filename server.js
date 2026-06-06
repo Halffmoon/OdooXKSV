@@ -1,9 +1,11 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const port = 4000;
@@ -13,6 +15,17 @@ const filePaths = {
   loginHistory: join(dataDir, 'login-history.json'),
   sessions: join(dataDir, 'sessions.json'),
 };
+
+const prisma = new PrismaClient();
+
+try {
+  await prisma.$connect();
+  console.log('Prisma connected to database.');
+} catch (err) {
+  console.error('Prisma failed to connect. Ensure DATABASE_URL is set in your environment.');
+  console.error(err);
+  process.exit(1);
+}
 
 const corsOptions = {
   origin: ['http://localhost:5173', 'http://localhost:5174'],
@@ -207,6 +220,46 @@ app.post('/api/reset-password', async (req, res) => {
   res.json({ message: 'Password reset successfully. You can now login.' });
 });
 
+// Vendors API - uses Prisma to persist vendors
+app.get('/api/vendors', async (req, res) => {
+  try {
+    const vendors = await prisma.vendor.findMany({ orderBy: { created_at: 'desc' } });
+    res.json({ vendors });
+  } catch (err) {
+    console.error('Error fetching vendors', err);
+    res.status(500).json({ error: 'Unable to fetch vendors' });
+  }
+});
+
+app.post('/api/vendors', async (req, res) => {
+  const { company_name, gst_number, category, status, contact_name, contact_email, contact_phone } = req.body;
+  if (!company_name || !gst_number || !category || !status) {
+    return res.status(400).json({ error: 'Missing required vendor fields.' });
+  }
+
+  try {
+    const vendor = await prisma.vendor.create({
+      data: {
+        company_name: company_name.trim(),
+        gst_number: gst_number.trim(),
+        category: category.trim(),
+        status: status.trim(),
+        contact_name: contact_name?.trim() ?? null,
+        contact_email: contact_email?.trim() ?? null,
+        contact_phone: contact_phone?.trim() ?? null,
+      },
+    });
+    res.json({ vendor });
+  } catch (err) {
+    console.error('Error creating vendor', err);
+    // Handle unique constraint on gst_number
+    if (err && err.code === 'P2002') {
+      return res.status(400).json({ error: 'A vendor with this GST number already exists.' });
+    }
+    res.status(500).json({ error: 'Unable to create vendor' });
+  }
+});
+
 await ensureDataFiles();
 
 const server = app.listen(port, () => {
@@ -220,3 +273,20 @@ server.on('error', (err) => {
   }
   throw err;
 });
+
+const shutdown = async () => {
+  console.log('Shutting down server...');
+  server.close(async () => {
+    try {
+      await prisma.$disconnect();
+      console.log('Prisma disconnected.');
+      process.exit(0);
+    } catch (err) {
+      console.error('Error during shutdown', err);
+      process.exit(1);
+    }
+  });
+};
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
