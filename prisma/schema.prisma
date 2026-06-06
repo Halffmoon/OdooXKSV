@@ -48,16 +48,40 @@ model RFQ {
 }
 
 model Quotation {
-  id            Int      @id @default(autoincrement())
-  rfq           RFQ      @relation(fields: [rfq_id], references: [id])
+  id            Int              @id @default(autoincrement())
+  rfq           RFQ              @relation(fields: [rfq_id], references: [id])
   rfq_id        Int
-  vendor        Vendor   @relation(fields: [vendor_id], references: [id])
+  vendor        Vendor           @relation(fields: [vendor_id], references: [id])
   vendor_id     Int
   total_amount  Float
   delivery_days Int
   status        String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  items         QuotationItem[]
+  approvals     Approval[]
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
+}
+
+model QuotationItem {
+  id            Int        @id @default(autoincrement())
+  quotation     Quotation  @relation(fields: [quotation_id], references: [id])
+  quotation_id  Int
+  unit_price    Float
+  total_price   Float
+  description   String?
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+}
+
+model Approval {
+  id           Int        @id @default(autoincrement())
+  approval_id  String     @unique
+  quotation    Quotation  @relation(fields: [quotation_id], references: [id])
+  quotation_id Int
+  status       String
+  remarks      String?
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
 }
 
 model RFQLineItem {
