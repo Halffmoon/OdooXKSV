@@ -16,7 +16,8 @@ function DashboardPage({ user, stats, orders, onLogout, onNavigate }) {
               className="nav-item"
               onClick={() => onNavigate && onNavigate(item === 'Vendors' ? 'vendors' : 'dashboard')}
             >
-              {item}
+              <span className="nav-item-icon" aria-hidden="true"></span>
+              <span>{item}</span>
             </button>
           ))}
         </nav>
