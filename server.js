@@ -17,14 +17,15 @@ const filePaths = {
 };
 
 const prisma = new PrismaClient();
+let prismaConnected = false;
 
 try {
   await prisma.$connect();
+  prismaConnected = true;
   console.log('Prisma connected to database.');
 } catch (err) {
-  console.error('Prisma failed to connect. Ensure DATABASE_URL is set in your environment.');
+  console.error('Prisma failed to connect. Vendor APIs will still run if only login is needed.');
   console.error(err);
-  process.exit(1);
 }
 
 const corsOptions = {
@@ -222,6 +223,9 @@ app.post('/api/reset-password', async (req, res) => {
 
 // Vendors API - uses Prisma to persist vendors
 app.get('/api/vendors', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Vendor APIs are not available right now.' });
+  }
   try {
     const vendors = await prisma.vendor.findMany({ orderBy: { created_at: 'desc' } });
     res.json({ vendors });
@@ -232,6 +236,9 @@ app.get('/api/vendors', async (req, res) => {
 });
 
 app.post('/api/vendors', async (req, res) => {
+  if (!prismaConnected) {
+    return res.status(503).json({ error: 'Database unavailable. Vendor APIs are not available right now.' });
+  }
   const { company_name, gst_number, category, status, contact_name, contact_email, contact_phone } = req.body;
   if (!company_name || !gst_number || !category || !status) {
     return res.status(400).json({ error: 'Missing required vendor fields.' });
@@ -278,8 +285,10 @@ const shutdown = async () => {
   console.log('Shutting down server...');
   server.close(async () => {
     try {
-      await prisma.$disconnect();
-      console.log('Prisma disconnected.');
+      if (prismaConnected) {
+        await prisma.$disconnect();
+        console.log('Prisma disconnected.');
+      }
       process.exit(0);
     } catch (err) {
       console.error('Error during shutdown', err);
